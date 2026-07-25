@@ -1,0 +1,11 @@
+d:\zm\C#\XyzController\ProcessModules\bin\Release\ProcessModules.dll
+d:\zm\C#\XyzController\ProcessModules\bin\Release\ProcessModules.pdb
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.csproj.AssemblyReference.cache
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.ModuleSettingForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.MainControl.RunForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.PointJump.RunForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.Trajectory.RunForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.csproj.GenerateResource.cache
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.csproj.CoreCompileInputs.cache
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.dll
+d:\zm\C#\XyzController\ProcessModules\obj\Release\ProcessModules.pdb

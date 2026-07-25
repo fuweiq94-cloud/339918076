@@ -1,0 +1,12 @@
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.csproj.AssemblyReference.cache
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.ModuleSettingForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.MainControl.RunForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.PointJump.RunForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.Trajectory.RunForm.resources
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.csproj.GenerateResource.cache
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.csproj.CoreCompileInputs.cache
+d:\zm\C#\XyzController\ProcessModules\bin\Debug\ProcessModules.dll
+d:\zm\C#\XyzController\ProcessModules\bin\Debug\ProcessModules.pdb
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.dll
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.pdb
+d:\zm\C#\XyzController\ProcessModules\obj\Debug\ProcessModules.MainControl.UnifiedRunForm.resources

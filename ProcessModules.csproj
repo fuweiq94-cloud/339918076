@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 工艺模组类库：依赖外部 InterfaceDefine.dll 和 MainModule.dll（参照 DOMO 模板的独立工艺模组 DLL）。
+     双向零引用：不引用 XyzController / XyzController.Controls / XyzController.WpfHost，
+     所需的业务层（Logic）、自定义控件（Controls）、运行界面（各模组 RunForm）均已移植到本项目内。
+     引用配置覆盖 DOMO 示例全部依赖：
+       InterfaceDefine.ProcessModuleBase        → 来自外部 InterfaceDefine.dll
+       InterfaceDefine.AppParam / ProjectManager → 来自外部 InterfaceDefine.dll / MainModule.dll
+       InterfaceDefine.CommKit.XMLSerializationHelper → 来自外部 InterfaceDefine.dll
+       MainModule.TaskItemSetting/TaskVariable/DataType → 来自外部 MainModule.dll
+       MainModule.MachineStatus                 → 来自外部 MainModule.dll
+       BCL：System / System.Core(Linq,Tasks) / System.Drawing / System.Windows.Forms / System.Xml / Microsoft.CSharp(dynamic) -->
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AssemblyName>ProcessModules</AssemblyName>
+    <RootNamespace>ProcessModules</RootNamespace>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E7F2A8B4-1C3D-4E5F-8A9B-0C1D2E3F4A5B}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProcessModuleBaseEx.cs" />
+    <Compile Include="ModuleAlarmEventArgs.cs" />
+    <!-- —— 业务核心类（不依赖外部 DLL）—— -->
+    <Compile Include="PresetPoint.cs" />
+    <Compile Include="ProcessModuleManager.cs" />
+    <Compile Include="ModuleSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModuleSettingForm.Designer.cs">
+      <DependentUpon>ModuleSettingForm.cs</DependentUpon>
+    </Compile>
+    <!-- —— 业务层（移植自 XyzController\Logic）—— -->
+    <Compile Include="Logic\AxisController.cs" />
+    <Compile Include="Logic\AxisJogService.cs" />
+    <Compile Include="Logic\AxisPosition.cs" />
+    <Compile Include="Logic\IMotionService.cs" />
+    <Compile Include="Logic\PlatformMotionService.cs" />
+    <Compile Include="Logic\PlatformMotionAdapter.cs" />
+    <Compile Include="Logic\JogMode.cs" />
+    <Compile Include="Logic\MotionCommand.cs" />
+    <Compile Include="Logic\XyzControllerHub.cs" />
+    <!-- —— 自定义控件（移植自 XyzController.Controls）—— -->
+    <Compile Include="Controls\XYView.cs" />
+    <Compile Include="Controls\ZBarView.cs" />
+    <Compile Include="Controls\DroLabel.cs" />
+    <Compile Include="Controls\JogButton.cs" />
+    <Compile Include="Controls\PaintHelper.cs" />
+    <Compile Include="Controls\MathHelper.cs" />
+    <!-- —— 主控制工艺模组 —— -->
+    <Compile Include="MainControl\MainControlGlobalSetting.cs" />
+    <Compile Include="MainControl\MainControlProjectSetting.cs" />
+    <Compile Include="MainControl\MainControlProcessModule.cs" />
+    <Compile Include="MainControl\RunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainControl\RunForm.Designer.cs">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainControl\UnifiedRunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainControl\UnifiedRunForm.Designer.cs">
+      <DependentUpon>UnifiedRunForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainControl\AxisLimitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainControl\AxisLimitForm.Designer.cs">
+      <DependentUpon>AxisLimitForm.cs</DependentUpon>
+    </Compile>
+    <!-- —— 点位跳转工艺模组 —— -->
+    <Compile Include="PointJump\PointJumpGlobalSetting.cs" />
+    <Compile Include="PointJump\PointJumpProjectSetting.cs" />
+    <Compile Include="PointJump\PointJumpProcessModule.cs" />
+    <Compile Include="PointJump\RunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PointJump\RunForm.Designer.cs">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </Compile>
+    <!-- —— 轨迹查看工艺模组 —— -->
+    <Compile Include="Trajectory\TrajectoryGlobalSetting.cs" />
+    <Compile Include="Trajectory\TrajectoryProjectSetting.cs" />
+    <Compile Include="Trajectory\TrajectoryViewProcessModule.cs" />
+    <Compile Include="Trajectory\RunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Trajectory\RunForm.Designer.cs">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ModuleSettingForm.resx">
+      <DependentUpon>ModuleSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainControl\RunForm.resx">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainControl\UnifiedRunForm.resx">
+      <DependentUpon>UnifiedRunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PointJump\RunForm.resx">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Trajectory\RunForm.resx">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <!-- 控件工具箱图标（ToolboxBitmap 资源） -->
+    <EmbeddedResource Include="Resources\XYView.bmp" />
+    <EmbeddedResource Include="Resources\ZBarView.bmp" />
+    <EmbeddedResource Include="Resources\DroLabel.bmp" />
+    <EmbeddedResource Include="Resources\JogButton.bmp" />
+  </ItemGroup>
+  <!-- 必需：引入 C# 构建目标。老式（非 SDK 风格）的 .csproj 不会自动加载。 -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild" />
+  <Target Name="AfterBuild" />
+</Project>
