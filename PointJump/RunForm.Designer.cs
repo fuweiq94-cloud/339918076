@@ -1,4 +1,4 @@
-namespace ProcessModules.PointJump
+namespace PointJumpProcessModule
 {
     /// <summary>
     /// 点位跳转窗体的设计器文件。
@@ -13,14 +13,14 @@ namespace ProcessModules.PointJump
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY 视图 ——
-        private ProcessModules.XYView xyView;
+        private PointJumpProcessModule.XYView xyView;
 
         // —— 实时坐标 DRO ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
-        private ProcessModules.DroLabel droX;
-        private ProcessModules.DroLabel droY;
-        private ProcessModules.DroLabel droZ;
+        private PointJumpProcessModule.DroLabel droX;
+        private PointJumpProcessModule.DroLabel droY;
+        private PointJumpProcessModule.DroLabel droZ;
 
         // —— 目标坐标输入 ——
         private System.Windows.Forms.GroupBox grpTarget;
@@ -73,7 +73,7 @@ namespace ProcessModules.PointJump
         {
             this.components = new System.ComponentModel.Container();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.xyView = new ProcessModules.XYView();
+            this.xyView = new PointJumpProcessModule.XYView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpSpeed = new System.Windows.Forms.GroupBox();
             this.tlpSpeed = new System.Windows.Forms.TableLayoutPanel();
@@ -100,9 +100,9 @@ namespace ProcessModules.PointJump
             this.btnJump = new System.Windows.Forms.Button();
             this.grpDro = new System.Windows.Forms.GroupBox();
             this.tlpDro = new System.Windows.Forms.TableLayoutPanel();
-            this.droX = new ProcessModules.DroLabel();
-            this.droY = new ProcessModules.DroLabel();
-            this.droZ = new ProcessModules.DroLabel();
+            this.droX = new PointJumpProcessModule.DroLabel();
+            this.droY = new PointJumpProcessModule.DroLabel();
+            this.droZ = new PointJumpProcessModule.DroLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.animTimer = new System.Windows.Forms.Timer(this.components);

@@ -1,0 +1,105 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: zh-CN
+branch: main
+nodes_managed: true
+exported_at: "2026-07-25T18:44:02Z"
+modules:
+    "":
+        dir_name: ProcessModules 工艺模组类库（三轴运动控制与可视化）
+        title: ProcessModules 工艺模组类库（三轴运动控制与可视化）
+        scope:
+            - ProcessModules.sln
+            - ProcessModules.csproj
+            - README.md
+            - AGENTS.md
+            - PresetPoint.cs
+            - Properties/
+            - ProcessModuleBaseEx删除说明.md
+            - 命名空间与类名一致性验证报告.md
+            - 基类调整说明.md
+            - 独立 DLL 构建说明.md
+            - 重构完成报告.md
+            - 项目文件清理说明.md
+        source_files: []
+        children:
+            - controls
+            - domo
+            - logic
+            - main_control
+            - point_jump
+            - trajectory
+        depends_on: []
+        related_to: []
+    controls:
+        dir_name: CNC_机床人机界面自定义控件集
+        title: CNC/机床人机界面自定义控件集
+        scope:
+            - Controls/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: main_control
+            - path: point_jump
+            - path: trajectory
+    domo:
+        dir_name: DOMO 工艺模组示例
+        title: DOMO 工艺模组示例
+        scope:
+            - DOMO/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: main_control
+            - path: point_jump
+            - path: trajectory
+    logic:
+        dir_name: 运动控制逻辑层（轴控制器与平台适配）
+        title: 运动控制逻辑层（轴控制器与平台适配）
+        scope:
+            - Logic/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: main_control
+            - path: point_jump
+            - path: trajectory
+    main_control:
+        dir_name: 主控制工艺模块（三轴手动控制与 JOG 寸动）
+        title: 主控制工艺模块（三轴手动控制与 JOG 寸动）
+        scope:
+            - MainControl/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: controls
+            - path: domo
+            - path: logic
+    point_jump:
+        dir_name: PointJump 点位跳转工艺模块
+        title: PointJump 点位跳转工艺模块
+        scope:
+            - PointJump/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: controls
+            - path: domo
+            - path: logic
+    trajectory:
+        dir_name: 轨迹查看工艺模块（Trajectory）
+        title: 轨迹查看工艺模块（Trajectory）
+        scope:
+            - Trajectory/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: controls
+            - path: domo
+            - path: logic

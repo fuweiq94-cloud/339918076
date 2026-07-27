@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MainControl 主控制工艺模组 - 独立 DLL 项目
+     输出：MainControl.dll
+     命名空间：MainControlProcessModule
+     类名：MainControlProcessModule
+     完整类型名：MainControlProcessModule.MainControlProcessModule -->
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AssemblyName>MainControl</AssemblyName>
+    <RootNamespace>MainControlProcessModule</RootNamespace>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B2C3D4E5-F6A7-8901-BCDE-F12345678901}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- MainControl 模块核心文件 -->
+    <Compile Include="MainControlProcessModule.cs" />
+    <Compile Include="MainControlGlobalSetting.cs" />
+    <Compile Include="MainControlProjectSetting.cs" />
+    <Compile Include="RunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RunForm.Designer.cs">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnifiedRunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UnifiedRunForm.Designer.cs">
+      <DependentUpon>UnifiedRunForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AxisLimitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AxisLimitForm.Designer.cs">
+      <DependentUpon>AxisLimitForm.cs</DependentUpon>
+    </Compile>
+    <!-- 公共业务层（每个模块都需要） -->
+    <Compile Include="..\Logic\AxisController.cs">
+      <Link>Logic\AxisController.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\AxisJogService.cs">
+      <Link>Logic\AxisJogService.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\AxisPosition.cs">
+      <Link>Logic\AxisPosition.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\IMotionService.cs">
+      <Link>Logic\IMotionService.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\XyzControllerHub.cs">
+      <Link>Logic\XyzControllerHub.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\JogMode.cs">
+      <Link>Logic\JogMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\MotionCommand.cs">
+      <Link>Logic\MotionCommand.cs</Link>
+    </Compile>
+    <!-- 公共控件（每个模块都需要） -->
+    <Compile Include="Controls\XYView.cs" />
+    <Compile Include="Controls\DroLabel.cs" />
+    <Compile Include="Controls\JogButton.cs" />
+    <Compile Include="Controls\PaintHelper.cs" />
+    <Compile Include="Controls\MathHelper.cs" />
+    <!-- 公共类 -->
+    <Compile Include="PresetPoint.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunForm.resx">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnifiedRunForm.resx">
+      <DependentUpon>UnifiedRunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Resources\XYView.bmp">
+      <Link>Resources\XYView.bmp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Resources\DroLabel.bmp">
+      <Link>Resources\DroLabel.bmp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Resources\JogButton.bmp">
+      <Link>Resources\JogButton.bmp</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

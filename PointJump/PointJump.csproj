@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PointJump 点位跳转工艺模组 - 独立 DLL 项目
+     输出：PointJump.dll
+     命名空间：PointJumpProcessModule
+     类名：PointJumpProcessModule
+     完整类型名：PointJumpProcessModule.PointJumpProcessModule -->
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AssemblyName>PointJump</AssemblyName>
+    <RootNamespace>PointJumpProcessModule</RootNamespace>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- PointJump 模块核心文件 -->
+    <Compile Include="PointJumpProcessModule.cs" />
+    <Compile Include="PointJumpGlobalSetting.cs" />
+    <Compile Include="PointJumpProjectSetting.cs" />
+    <Compile Include="RunForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RunForm.Designer.cs">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </Compile>
+    <!-- 公共业务层（每个模块都需要） -->
+    <Compile Include="..\Logic\AxisController.cs">
+      <Link>Logic\AxisController.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\AxisPosition.cs">
+      <Link>Logic\AxisPosition.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\IMotionService.cs">
+      <Link>Logic\IMotionService.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\XyzControllerHub.cs">
+      <Link>Logic\XyzControllerHub.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\MotionCommand.cs">
+      <Link>Logic\MotionCommand.cs</Link>
+    </Compile>
+    <!-- 公共控件（每个模块都需要） -->
+    <Compile Include="Controls\XYView.cs" />
+    <Compile Include="Controls\ZBarView.cs" />
+    <Compile Include="Controls\DroLabel.cs" />
+    <Compile Include="Controls\PaintHelper.cs" />
+    <Compile Include="Controls\MathHelper.cs" />
+    <!-- 公共类 -->
+    <Compile Include="PresetPoint.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunForm.resx">
+      <DependentUpon>RunForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Resources\XYView.bmp">
+      <Link>Resources\XYView.bmp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Resources\ZBarView.bmp">
+      <Link>Resources\ZBarView.bmp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Resources\DroLabel.bmp">
+      <Link>Resources\DroLabel.bmp</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

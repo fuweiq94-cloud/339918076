@@ -1,0 +1,19 @@
+schema_version: 1
+module_path: ""
+title: ProcessModules 工艺模组类库（三轴运动控制与可视化）
+scope:
+    - ProcessModules.sln
+    - ProcessModules.csproj
+    - README.md
+    - AGENTS.md
+    - PresetPoint.cs
+    - Properties/
+    - ProcessModuleBaseEx删除说明.md
+    - 命名空间与类名一致性验证报告.md
+    - 基类调整说明.md
+    - 独立 DLL 构建说明.md
+    - 重构完成报告.md
+    - 项目文件清理说明.md
+source_files: []
+depends_on: []
+related_to: []

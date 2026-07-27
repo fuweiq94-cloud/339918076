@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace ProcessModules.MainControl
+namespace MainControlProcessModule
 {
     /// <summary>
     /// 轴限位设置弹窗：修改 X/Y/Z/U 四轴的上下限参数。

@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: domo
+title: DOMO 工艺模组示例
+scope:
+    - DOMO/
+source_files: []
+depends_on: []
+related_to:
+    - path: main_control
+    - path: point_jump
+    - path: trajectory

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ProcessModules.MainControl
+namespace MainControlProcessModule
 {
     /// <summary>
     /// 统一运行界面：合并 MainControl / PointJump / Trajectory 三个模组的全部功能。

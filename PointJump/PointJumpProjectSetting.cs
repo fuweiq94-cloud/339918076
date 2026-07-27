@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using InterfaceDefine;
 
-namespace ProcessModules.PointJump
+namespace PointJumpProcessModule
 {
     /// <summary>
     /// 点位跳转工艺模组项目参数。

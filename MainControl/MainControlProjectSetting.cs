@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using InterfaceDefine;
 
-namespace ProcessModules.MainControl
+namespace MainControlProcessModule
 {
     /// <summary>
     /// 主控制工艺模组项目参数（对应 DOMO 模板 MAINMODUO.CS 中的 DemoProjectSetting）。

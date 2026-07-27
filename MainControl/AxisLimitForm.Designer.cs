@@ -1,4 +1,4 @@
-namespace ProcessModules.MainControl
+namespace MainControlProcessModule
 {
     partial class AxisLimitForm
     {

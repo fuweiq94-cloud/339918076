@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ProcessModules.Trajectory
+namespace TrajectoryViewProcessModule
 {
     /// <summary>
     /// 轨迹查看工艺模组运行界面（对应 DOMO 模板中的 RunForm，纯 UI 层）。

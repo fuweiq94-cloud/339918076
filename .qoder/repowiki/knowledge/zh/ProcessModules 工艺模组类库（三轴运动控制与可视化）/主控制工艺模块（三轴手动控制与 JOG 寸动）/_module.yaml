@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: main_control
+title: 主控制工艺模块（三轴手动控制与 JOG 寸动）
+scope:
+    - MainControl/
+source_files: []
+depends_on: []
+related_to:
+    - path: controls
+    - path: domo
+    - path: logic

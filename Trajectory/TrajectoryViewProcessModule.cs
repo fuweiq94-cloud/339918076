@@ -3,11 +3,11 @@ using System.Windows.Forms;
 using InterfaceDefine;
 using MainModule;
 
-namespace ProcessModules.Trajectory
+namespace TrajectoryViewProcessModule
 {
     /// <summary>
     /// 轨迹查看工艺模组（对应 DOMO.CS 中的 ProcessModuleDemo）。
-    /// 继承 ProcessModuleBaseEx（平台 ProcessModuleBase + 本库扩展），
+    /// 继承 ProcessModuleBase（平台提供的基类），
     /// 封装轨迹观察与记录业务：
     /// 持有 XyzControllerHub（业务层），
     /// 运行界面为 RunForm（DOMO 模式：new RunForm(this)，共享业务状态）。
@@ -22,7 +22,7 @@ namespace ProcessModules.Trajectory
     ///   SETSPEED value   → 设置速度档位 [0,100]
     ///   STOP             → 冻结所有轴目标到当前值
     /// </remarks>
-    public class TrajectoryViewProcessModule : ProcessModuleBaseEx
+    public class TrajectoryViewProcessModule : ProcessModuleBase
     {
         internal RunForm runForm;
         public ModuleSettingForm settingForm;
@@ -35,13 +35,6 @@ namespace ProcessModules.Trajectory
 
         /// <summary>模组持有的 XYZ 控制器（集成现有业务层）。</summary>
         public XyzControllerHub Hub { get { return _hub; } }
-
-        /// <summary>注入/替换后端运动控制服务（转发到内部 Hub，供上位机平台对接）。</summary>
-        public override void SetMotionService(IMotionService service)
-        {
-            if (_hub != null)
-                _hub.SetService(service);
-        }
 
         public override dynamic FunctionCaller
         {
@@ -62,7 +55,6 @@ namespace ProcessModules.Trajectory
                 LoadSetting();
 
                 // 创建业务层（轴范围与速度取自全局参数）
-                // null = 后端服务尚未接入（待引入真实 DLL 后通过 SetService 注入）
                 _hub = new XyzControllerHub(null,
                     globalSetting.XMin, globalSetting.XMax,
                     globalSetting.YMin, globalSetting.YMax,
@@ -70,11 +62,10 @@ namespace ProcessModules.Trajectory
                     globalSetting.UMin, globalSetting.UMax);
                 _hub.SpeedSetting = globalSetting.SpeedSetting;
 
-                // 注册平台事件：打开项目时重新加载项目参数（对齐 DOMO：ProjectManager.openProject）
+                // 注册平台事件：打开项目时重新加载项目参数
                 ProjectManager.openProject += OnOpenProject;
 
                 bInitOK = true;
-                SetModuleVariable("轨迹查看初始化完成", "true");
                 return bInitOK;
             }
             catch (Exception ex)

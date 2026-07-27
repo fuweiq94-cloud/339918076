@@ -1,4 +1,4 @@
-namespace ProcessModules.MainControl
+namespace MainControlProcessModule
 {
     /// <summary>
     /// 统一运行界面设计器文件。
@@ -14,15 +14,15 @@ namespace ProcessModules.MainControl
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY/Z 视图 ——
-        private ProcessModules.XYView xyView;
-        private ProcessModules.ZBarView zBar;
+        private MainControlProcessModule.XYView xyView;
+        private MainControlProcessModule.ZBarView zBar;
 
         // —— DRO 实时坐标 ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
-        private ProcessModules.DroLabel droX;
-        private ProcessModules.DroLabel droY;
-        private ProcessModules.DroLabel droZ;
+        private MainControlProcessModule.DroLabel droX;
+        private MainControlProcessModule.DroLabel droY;
+        private MainControlProcessModule.DroLabel droZ;
 
         // —— 目标坐标输入 ——
         private System.Windows.Forms.GroupBox grpTarget;
@@ -55,14 +55,14 @@ namespace ProcessModules.MainControl
         private System.Windows.Forms.Label lblStep;
         private System.Windows.Forms.NumericUpDown nudJogStep;
         private System.Windows.Forms.Label lblAxisX;
-        private ProcessModules.JogButton jogXMinus;
-        private ProcessModules.JogButton jogXPlus;
+        private MainControlProcessModule.JogButton jogXMinus;
+        private MainControlProcessModule.JogButton jogXPlus;
         private System.Windows.Forms.Label lblAxisY;
-        private ProcessModules.JogButton jogYMinus;
-        private ProcessModules.JogButton jogYPlus;
+        private MainControlProcessModule.JogButton jogYMinus;
+        private MainControlProcessModule.JogButton jogYPlus;
         private System.Windows.Forms.Label lblAxisZ;
-        private ProcessModules.JogButton jogZMinus;
-        private ProcessModules.JogButton jogZPlus;
+        private MainControlProcessModule.JogButton jogZMinus;
+        private MainControlProcessModule.JogButton jogZPlus;
         private System.Windows.Forms.Button btnEStop;
 
         // —— 通用控制 ——
@@ -100,8 +100,8 @@ namespace ProcessModules.MainControl
         {
             this.components = new System.ComponentModel.Container();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.xyView = new ProcessModules.XYView();
-            this.zBar = new ProcessModules.ZBarView();
+            this.xyView = new MainControlProcessModule.XYView();
+            this.zBar = new MainControlProcessModule.ZBarView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.btnSettings = new System.Windows.Forms.Button();
             this.grpCommon = new System.Windows.Forms.GroupBox();
@@ -120,14 +120,14 @@ namespace ProcessModules.MainControl
             this.nudJogStep = new System.Windows.Forms.NumericUpDown();
             this.btnEStop = new System.Windows.Forms.Button();
             this.lblAxisX = new System.Windows.Forms.Label();
-            this.jogXMinus = new ProcessModules.JogButton();
-            this.jogXPlus = new ProcessModules.JogButton();
+            this.jogXMinus = new MainControlProcessModule.JogButton();
+            this.jogXPlus = new MainControlProcessModule.JogButton();
             this.lblAxisY = new System.Windows.Forms.Label();
-            this.jogYMinus = new ProcessModules.JogButton();
-            this.jogYPlus = new ProcessModules.JogButton();
+            this.jogYMinus = new MainControlProcessModule.JogButton();
+            this.jogYPlus = new MainControlProcessModule.JogButton();
             this.lblAxisZ = new System.Windows.Forms.Label();
-            this.jogZMinus = new ProcessModules.JogButton();
-            this.jogZPlus = new ProcessModules.JogButton();
+            this.jogZMinus = new MainControlProcessModule.JogButton();
+            this.jogZPlus = new MainControlProcessModule.JogButton();
             this.grpPresets = new System.Windows.Forms.GroupBox();
             this.tlpPresets = new System.Windows.Forms.TableLayoutPanel();
             this.lvPresets = new System.Windows.Forms.ListView();
@@ -149,9 +149,9 @@ namespace ProcessModules.MainControl
             this.btnJump = new System.Windows.Forms.Button();
             this.grpDro = new System.Windows.Forms.GroupBox();
             this.tlpDro = new System.Windows.Forms.TableLayoutPanel();
-            this.droX = new ProcessModules.DroLabel();
-            this.droY = new ProcessModules.DroLabel();
-            this.droZ = new ProcessModules.DroLabel();
+            this.droX = new MainControlProcessModule.DroLabel();
+            this.droY = new MainControlProcessModule.DroLabel();
+            this.droZ = new MainControlProcessModule.DroLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.animTimer = new System.Windows.Forms.Timer(this.components);

@@ -3,11 +3,11 @@ using System.Windows.Forms;
 using InterfaceDefine;
 using MainModule;
 
-namespace ProcessModules.PointJump
+namespace PointJumpProcessModule
 {
     /// <summary>
     /// 点位跳转工艺模组（对应 DOMO.CS 中的 ProcessModuleDemo）。
-    /// 继承 ProcessModuleBaseEx（平台 ProcessModuleBase + 本库扩展），
+    /// 继承 ProcessModuleBase（平台提供的基类），
     /// 封装点位管理与跳转业务：
     /// 持有 XyzControllerHub（业务层）与预设点位列表（项目参数），
     /// 运行界面为 RunForm（DOMO 模式：new RunForm(this)，界面与模组共享同一份数据）。
@@ -21,7 +21,7 @@ namespace ProcessModules.PointJump
     ///   SETSPEED value      → 设置速度档位 [0,100]
     ///   STOP                → 冻结所有轴目标到当前值
     /// </remarks>
-    public class PointJumpProcessModule : ProcessModuleBaseEx
+    public class PointJumpProcessModule : ProcessModuleBase
     {
         internal RunForm runForm;
         public ModuleSettingForm settingForm;
@@ -34,13 +34,6 @@ namespace ProcessModules.PointJump
 
         /// <summary>模组持有的 XYZ 控制器（集成现有业务层）。</summary>
         public XyzControllerHub Hub { get { return _hub; } }
-
-        /// <summary>注入/替换后端运动控制服务（转发到内部 Hub，供上位机平台对接）。</summary>
-        public override void SetMotionService(IMotionService service)
-        {
-            if (_hub != null)
-                _hub.SetService(service);
-        }
 
         public override dynamic FunctionCaller
         {
@@ -61,7 +54,6 @@ namespace ProcessModules.PointJump
                 LoadSetting();
 
                 // 创建业务层（轴范围与速度取自全局参数）
-                // null = 后端服务尚未接入（待引入真实 DLL 后通过 SetService 注入）
                 _hub = new XyzControllerHub(null,
                     globalSetting.XMin, globalSetting.XMax,
                     globalSetting.YMin, globalSetting.YMax,
@@ -73,11 +65,10 @@ namespace ProcessModules.PointJump
                 if (projectSetting.Presets.Count == 0)
                     AddDefaultPresets();
 
-                // 注册平台事件：打开项目时重新加载项目参数（对齐 DOMO：ProjectManager.openProject）
+                // 注册平台事件：打开项目时重新加载项目参数
                 ProjectManager.openProject += OnOpenProject;
 
                 bInitOK = true;
-                SetModuleVariable("点位跳转初始化完成", "true");
                 return bInitOK;
             }
             catch (Exception ex)
@@ -131,7 +122,7 @@ namespace ProcessModules.PointJump
             try
             {
                 globalSetting = PointJumpGlobalSetting.Load(processModuleName);
-                projectSetting = PointJumpProjectSetting.Load(processModuleName);
+                projectSetting = PointJumpProcessModule.Load(processModuleName);
 
                 taskItemSetting = globalSetting.taskItemSetting;
                 GetModuleVariable("点位跳转首次运行", DataType.布尔, "false");

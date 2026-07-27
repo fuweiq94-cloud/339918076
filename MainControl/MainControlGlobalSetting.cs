@@ -3,7 +3,7 @@ using System.IO;
 using InterfaceDefine;
 using MainModule;
 
-namespace ProcessModules.MainControl
+namespace MainControlProcessModule
 {
     /// <summary>
     /// 主控制工艺模组全局参数（对应 DOMO 模板 GETSEETING.CS 中的 DemoGlobalSetting）。

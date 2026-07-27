@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using InterfaceDefine;
 
-namespace ProcessModules.Trajectory
+namespace TrajectoryViewProcessModule
 {
     /// <summary>
     /// 轨迹查看工艺模组项目参数。
