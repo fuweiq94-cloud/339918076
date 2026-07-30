@@ -28,6 +28,9 @@ namespace MainControlProcessModule
         // —— 软限位距离显示 ——
         private LimitDistanceView limitDistView;
 
+        // —— 点位信息面板 ——
+        private PointInfoView pointInfoView;
+
         // —— X 轴组 ——
         private System.Windows.Forms.GroupBox grpX;
         private System.Windows.Forms.TrackBar trbX;
@@ -115,6 +118,7 @@ namespace MainControlProcessModule
             this.zBar = new ZBarView();
             this.uView = new URotationView();
             this.limitDistView = new LimitDistanceView();
+            this.pointInfoView = new PointInfoView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpCommon = new System.Windows.Forms.GroupBox();
             this.tlpCommon = new System.Windows.Forms.TableLayoutPanel();
@@ -205,8 +209,9 @@ namespace MainControlProcessModule
             this.splitMain.Panel2.Controls.Add(this.zBar);
             this.splitMain.Panel2.Controls.Add(this.uView);
             this.splitMain.Panel2.Controls.Add(this.limitDistView);
+            this.splitMain.Panel2.Controls.Add(this.pointInfoView);
             this.splitMain.Panel2.Padding = new System.Windows.Forms.Padding(12, 18, 12, 18);
-            this.splitMain.Panel2MinSize = 450;
+            this.splitMain.Panel2MinSize = 550;
             this.splitMain.Size = new System.Drawing.Size(1754, 1253);
             this.splitMain.SplitterDistance = 1660;
             this.splitMain.SplitterWidth = 6;

@@ -190,8 +190,14 @@ namespace MainControlProcessModule
             // —— 鼠标拖动 XY 视图设定目标 ——
             xyView.TargetSetByMouse += new EventHandler<TargetSetEventArgs>(XyView_TargetSetByMouse);
 
+            // —— 点位信息面板事件 ——
+            pointInfoView.JumpToPointRequested += PointInfoView_JumpToPointRequested;
+
             // —— 键盘 ——
             this.KeyDown += new KeyEventHandler(RunForm_KeyDown);
+
+            // 加载点位到 UI
+            LoadPointsToUI();
         }
 
         // —— hub 变化 → 刷新 UI ——
@@ -466,6 +472,34 @@ namespace MainControlProcessModule
         private void xyView_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // ============== 点位信息面板处理 ==============
+
+        /// <summary>
+        /// 跳转到选中的点位。
+        /// </summary>
+        private void PointInfoView_JumpToPointRequested(object sender, int pointIndex)
+        {
+            if (pointIndex >= 0 && projectSetting.Presets.Count > pointIndex)
+            {
+                var preset = projectSetting.Presets[pointIndex];
+                _hub.SetTarget(preset.X, preset.Y, preset.Z);
+                lblStatus.Text = string.Format("跳转到点位：{0} → X={1:F2} Y={2:F2} Z={3:F2}",
+                    preset.Name ?? "无名", preset.X, preset.Y, preset.Z);
+            }
+        }
+
+        /// <summary>
+        /// 加载并显示预设点位（从项目参数读取）。
+        /// </summary>
+        private void LoadPointsToUI()
+        {
+            if (projectSetting != null && projectSetting.Presets != null)
+            {
+                // 调用 PointInfoView 更新数据
+                pointInfoView.UpdatePoints(projectSetting.Presets);
+            }
         }
     }
 }
