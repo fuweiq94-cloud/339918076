@@ -90,14 +90,13 @@ namespace ProcessModules
 
             try
             {
-                // 绘制标题
+                // 绘制标题 - 居左显示
                 using (Brush titleBrush = new SolidBrush(Color.FromArgb(80, 90, 100)))
-                using (Font titleFont = new Font("微软雅黑", 11F, FontStyle.Bold))
+                using (Font titleFont = new Font("微软雅黑", 12F, FontStyle.Bold))
                 {
                     string title = "软限位距离";
                     SizeF titleSize = g.MeasureString(title, titleFont);
-                    g.DrawString(title, titleFont, titleBrush,
-                        right - titleSize.Width - 15, 5);
+                    g.DrawString(title, titleFont, titleBrush, 15, 5);  // 标题移到左上角，更大更明显
                 }
 
                 // 绘制表头
