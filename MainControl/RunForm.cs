@@ -401,7 +401,41 @@ namespace MainControlProcessModule
             zBar.UpdateActual(_hub.Z.Current);
             uView.UpdateActual(_hub.U.Current);  // U 轴实际角度更新
 
+            // 更新软限位距离显示
+            UpdateLimitDistances();
+
             UpdateStatusLive();
+        }
+
+        /// <summary>
+        /// 计算并更新各轴距软限位的剩余距离。
+        /// 正值 = 距上限位距离，负值 = 距下限位距离
+        /// </summary>
+        private void UpdateLimitDistances()
+        {
+            if (limitDistView == null) return;
+
+            // X 轴
+            float xMinRemain = _hub.X.Current - _hub.X.Min;  // 距下限位
+            float xMaxRemain = _hub.X.Max - _hub.X.Current; // 距上限位
+            float xRemaining = (_hub.X.Current <= (_hub.X.Min + _hub.X.Max) / 2) ? -xMinRemain : xMaxRemain;
+
+            // Y 轴
+            float yMinRemain = _hub.Y.Current - _hub.Y.Min;
+            float yMaxRemain = _hub.Y.Max - _hub.Y.Current;
+            float yRemaining = (_hub.Y.Current <= (_hub.Y.Min + _hub.Y.Max) / 2) ? -yMinRemain : yMaxRemain;
+
+            // Z 轴
+            float zMinRemain = _hub.Z.Current - _hub.Z.Min;
+            float zMaxRemain = _hub.Z.Max - _hub.Z.Current;
+            float zRemaining = (_hub.Z.Current <= (_hub.Z.Min + _hub.Z.Max) / 2) ? -zMinRemain : zMaxRemain;
+
+            // U 轴
+            float uMinRemain = _hub.U.Current - _hub.U.Min;
+            float uMaxRemain = _hub.U.Max - _hub.U.Current;
+            float uRemaining = (_hub.U.Current <= (_hub.U.Min + _hub.U.Max) / 2) ? -uMinRemain : uMaxRemain;
+
+            limitDistView.UpdateDistances(xRemaining, yRemaining, zRemaining, uRemaining);
         }
 
         // ============== 状态栏 ==============

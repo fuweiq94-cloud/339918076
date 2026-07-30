@@ -17,6 +17,9 @@ namespace MainControlProcessModule
         private XYView xyView;
         private ZBarView zBar;
 
+        // —— 软限位距离显示 ——
+        private LimitDistanceView limitDistView;
+
         // —— DRO 实时坐标 ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
@@ -102,6 +105,7 @@ namespace MainControlProcessModule
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.xyView = new XYView();
             this.zBar = new ZBarView();
+            this.limitDistView = new LimitDistanceView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.btnSettings = new System.Windows.Forms.Button();
             this.grpCommon = new System.Windows.Forms.GroupBox();
@@ -194,8 +198,9 @@ namespace MainControlProcessModule
             // splitMain.Panel2
             // 
             this.splitMain.Panel2.Controls.Add(this.zBar);
+            this.splitMain.Panel2.Controls.Add(this.limitDistView);
             this.splitMain.Panel2.Padding = new System.Windows.Forms.Padding(8, 12, 8, 12);
-            this.splitMain.Panel2MinSize = 80;
+            this.splitMain.Panel2MinSize = 450;
             this.splitMain.Size = new System.Drawing.Size(1504, 1101);
             this.splitMain.SplitterDistance = 1418;
             this.splitMain.SplitterWidth = 6;
