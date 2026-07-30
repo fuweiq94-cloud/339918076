@@ -66,12 +66,13 @@
     <Compile Include="..\Logic\MotionCommand.cs">
       <Link>Logic\MotionCommand.cs</Link>
     </Compile>
-    <!-- 公共控件（每个模块都需要） -->
-    <Compile Include="Controls\XYView.cs" />
-    <Compile Include="Controls\ZBarView.cs" />
-    <Compile Include="Controls\DroLabel.cs" />
-    <Compile Include="Controls\PaintHelper.cs" />
-    <Compile Include="Controls\MathHelper.cs" />
+    <!-- 自定义控件 -->
+    <Compile Include="XYView.cs" />
+    <Compile Include="ZBarView.cs" />
+    <Compile Include="DroLabel.cs" />
+    <Compile Include="JogButton.cs" />
+    <Compile Include="PaintHelper.cs" />
+    <Compile Include="MathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RunForm.resx">

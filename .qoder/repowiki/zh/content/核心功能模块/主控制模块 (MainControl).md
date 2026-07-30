@@ -13,6 +13,12 @@
 - [AxisLimitForm.Designer.cs](file://MainControl/AxisLimitForm.Designer.cs)
 - [MainControl.csproj](file://MainControl/MainControl.csproj)
 - [README.md](file://MainControl/README.md)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [XYView.cs](file://Controls/XYView.cs)
+- [ZBarView.cs](file://Controls/ZBarView.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
@@ -20,39 +26,50 @@
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 </cite>
 
+## 更新摘要
+**所做更改**
+- 新增共享控件库章节，详细介绍Controls目录下的通用UI组件
+- 更新项目结构以反映独立DLL架构重构
+- 添加共享控件的使用示例和集成指南
+- 更新依赖关系图以包含新的控件库结构
+- 增强构建配置和项目文件说明
+
 ## 目录
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
-4. [架构总览](#架构总览)
-5. [详细组件分析](#详细组件分析)
-6. [依赖关系分析](#依赖关系分析)
-7. [性能考虑](#性能考虑)
-8. [故障排查指南](#故障排查指南)
-9. [结论](#结论)
-10. [附录：集成与使用示例](#附录集成与使用示例)
+4. [共享控件库](#共享控件库)
+5. [架构总览](#架构总览)
+6. [详细组件分析](#详细组件分析)
+7. [依赖关系分析](#依赖关系分析)
+8. [性能考虑](#性能考虑)
+9. [故障排查指南](#故障排查指南)
+10. [结论](#结论)
+11. [附录：集成与使用示例](#附录集成与使用示例)
 
 ## 简介
-本文件为“主控制模块（MainControl）”的权威技术文档，面向开发者与系统集成人员。内容覆盖：
+本文件为"主控制模块（MainControl）"的权威技术文档，面向开发者与系统集成人员。内容覆盖：
 - 轴参数配置、运动控制界面、限位设置等核心功能
 - UnifiedRunForm 与 RunForm 界面的使用方法与交互逻辑
 - AxisLimitForm 的限位配置与安全保护机制
 - 全局设置（MainControlGlobalSetting）与项目设置（MainControlProjectSetting）的配置项说明
+- **新增**：共享控件库（DroLabel、JogButton、MathHelper等）的使用与扩展
 - 生命周期管理与事件处理机制
 - 错误处理策略与异常恢复方法
 - 最佳实践与性能优化建议
 
-该模块以进程模块形式提供统一的运动控制入口，通过服务层与底层硬件适配器解耦，支持多轴设备的统一控制与可视化操作。
+该模块已重构为独立的DLL项目，通过共享控件库提供统一的运动控制入口，支持多轴设备的统一控制与可视化操作。
 
 ## 项目结构
-MainControl 子项目包含 UI 表单、设置类与进程模块入口，并与 Logic 层的运动服务进行协作。关键目录与文件如下：
+MainControl 子项目已重构为独立DLL，包含UI表单、设置类、进程模块入口以及共享控件库。关键目录与文件如下：
 - MainControl 目录：UI 表单（UnifiedRunForm、RunForm、AxisLimitForm）、设置类（Global/Project Setting）、进程模块入口（MainControlProcessModule）
+- Controls 目录：**新增**共享控件库（DroLabel、JogButton、MathHelper、PaintHelper、XYView、ZBarView）
 - Logic 目录：运动服务与适配器（PlatformMotionService、PlatformMotionAdapter、IMotionService、AxisController、XyzControllerHub）
 - 资源与构建：MainControl.csproj、README.md
 
 ```mermaid
 graph TB
-subgraph "MainControl"
+subgraph "MainControl DLL"
 A["MainControlProcessModule.cs"]
 B["MainControlGlobalSetting.cs"]
 C["MainControlProjectSetting.cs"]
@@ -60,37 +77,69 @@ D["UnifiedRunForm.cs/.Designer.cs"]
 E["RunForm.cs/.Designer.cs"]
 F["AxisLimitForm.cs/.Designer.cs"]
 end
-subgraph "Logic"
-G["PlatformMotionService.cs"]
-H["PlatformMotionAdapter.cs"]
-I["IMotionService.cs"]
-J["AxisController.cs"]
-K["XyzControllerHub.cs"]
+subgraph "Controls 共享控件库"
+G["DroLabel.cs"]
+H["JogButton.cs"]
+I["MathHelper.cs"]
+J["PaintHelper.cs"]
+K["XYView.cs"]
+L["ZBarView.cs"]
+end
+subgraph "Logic 运动服务层"
+M["PlatformMotionService.cs"]
+N["PlatformMotionAdapter.cs"]
+O["IMotionService.cs"]
+P["AxisController.cs"]
+Q["XyzControllerHub.cs"]
 end
 A --> D
 A --> E
 A --> F
 D --> G
+D --> H
+D --> I
+D --> J
+D --> K
+D --> L
 E --> G
+E --> H
+E --> I
+E --> J
+E --> K
+E --> L
 F --> G
-G --> H
-G --> I
-G --> J
-G --> K
+F --> H
+F --> I
+F --> J
+F --> K
+F --> L
+D --> M
+E --> M
+F --> M
+M --> N
+M --> O
+M --> P
+M --> Q
 ```
 
-图表来源
+**图表来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [AxisLimitForm.cs](file://MainControl/AxisLimitForm.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [XYView.cs](file://Controls/XYView.cs)
+- [ZBarView.cs](file://Controls/ZBarView.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 
-章节来源
+**章节来源**
 - [MainControl.csproj](file://MainControl/MainControl.csproj)
 - [README.md](file://MainControl/README.md)
 
@@ -103,28 +152,117 @@ G --> K
 - 设置类：
   - MainControlGlobalSetting：全局运行参数（如默认速度、加速度、回零模式等）
   - MainControlProjectSetting：项目级参数（如轴映射、点位表、工艺参数等）
+- **新增**：共享控件库：
+  - DroLabel：数字显示标签控件，用于实时显示轴位置
+  - JogButton：点动按钮控件，支持方向控制和速度调节
+  - MathHelper：数学计算辅助工具类
+  - PaintHelper：绘图辅助工具类
+  - XYView：二维视图控件，用于平面轨迹显示
+  - ZBarView：Z轴条形视图控件
 - 运动服务：
   - PlatformMotionService：对外暴露的运动控制服务，封装命令编排与状态同步
   - PlatformMotionAdapter：平台适配层，屏蔽不同硬件差异
   - IMotionService：运动服务接口定义
   - AxisController / XyzControllerHub：轴控制器与XYZ三轴协调器
 
-章节来源
+**章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [AxisLimitForm.cs](file://MainControl/AxisLimitForm.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [XYView.cs](file://Controls/XYView.cs)
+- [ZBarView.cs](file://Controls/ZBarView.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 
+## 共享控件库
+**新增**：MainControl模块重构后引入了专门的Controls目录，包含可重用的UI控件和工具类，供各个界面组件共享使用。
+
+### DroLabel 数字显示标签
+功能特性：
+- 实时显示数值变化，支持格式化输出
+- 颜色编码显示状态（正常、警告、报警）
+- 自定义字体大小和对齐方式
+- 支持单位显示和精度设置
+
+使用示例：
+```csharp
+// 创建并配置DroLabel
+var droLabel = new DroLabel();
+droLabel.AxisName = "X轴";
+droLabel.Unit = "mm";
+droLabel.DecimalPlaces = 3;
+droLabel.WarningThreshold = 100.0;
+droLabel.AlarmThreshold = 150.0;
+```
+
+### JogButton 点动按钮
+功能特性：
+- 支持四方向点动控制（上、下、左、右）
+- 长按加速/减速功能
+- 双击快速定位功能
+- 视觉反馈和动画效果
+
+使用示例：
+```csharp
+// 创建点动按钮
+var jogButton = new JogButton();
+jogButton.Direction = Direction.Up;
+jogButton.DefaultSpeed = 50.0;
+jogButton.MaxSpeed = 200.0;
+jogButton.OnJogStart += HandleJogStart;
+jogButton.OnJogStop += HandleJogStop;
+```
+
+### MathHelper 数学计算工具
+提供的功能：
+- 坐标转换和距离计算
+- 角度和弧度转换
+- 数值范围和插值计算
+- 几何图形计算工具
+
+### PaintHelper 绘图辅助工具
+提供的功能：
+- 图形绘制基础函数
+- 颜色和画笔管理
+- 文本渲染和测量
+- 图形变换和缩放
+
+### XYView 二维视图控件
+功能特性：
+- 二维坐标系显示
+- 轨迹绘制和路径规划
+- 缩放和平移操作
+- 网格和刻度显示
+
+### ZBarView Z轴条形视图
+功能特性：
+- Z轴高度可视化
+- 进度条式显示
+- 阈值标记和报警指示
+- 实时更新和动画效果
+
+**章节来源**
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [XYView.cs](file://Controls/XYView.cs)
+- [ZBarView.cs](file://Controls/ZBarView.cs)
+
 ## 架构总览
-MainControl 采用“界面-服务-适配器”的分层架构：
+MainControl 采用"界面-服务-适配器"的分层架构，并通过共享控件库实现UI组件的复用：
 - 界面层：UnifiedRunForm、RunForm、AxisLimitForm 负责用户交互与参数输入
+- **新增**：控件层：DroLabel、JogButton、XYView等共享控件提供基础UI功能
 - 服务层：PlatformMotionService 提供统一的运动控制 API，处理并发、状态机与事件
 - 适配层：PlatformMotionAdapter 对接具体设备驱动，屏蔽差异
 - 控制器：AxisController、XxyzControllerHub 实现轴级与多轴协同控制
@@ -143,17 +281,35 @@ class UnifiedRunForm {
 +MoveToAbsolute(axis, position)
 +HomeAll()
 +EmergencyStop()
++UseSharedControls()
 }
 class RunForm {
 +LoadTask(taskId)
 +ExecuteTask()
 +PauseResume()
 +Abort()
++UseSharedControls()
 }
 class AxisLimitForm {
 +SetSoftLimits(axis, min, max)
 +SetHardLimits(axis, enable, triggerMode)
 +ValidateAndSave()
++UseSharedControls()
+}
+class DroLabel {
++DisplayValue(value)
++FormatOutput(format)
++UpdateColor(state)
+}
+class JogButton {
++HandleClick(direction)
++HandleLongPress(speed)
++AnimatePress()
+}
+class MathHelper {
++ConvertCoordinates()
++CalculateDistance()
++InterpolateValues()
 }
 class PlatformMotionService {
 +Jog(axis, direction, speed)
@@ -174,6 +330,15 @@ class XyzControllerHub
 MainControlProcessModule --> UnifiedRunForm : "创建并显示"
 MainControlProcessModule --> RunForm : "创建并显示"
 MainControlProcessModule --> AxisLimitForm : "创建并显示"
+UnifiedRunForm --> DroLabel : "使用"
+UnifiedRunForm --> JogButton : "使用"
+UnifiedRunForm --> MathHelper : "调用"
+RunForm --> DroLabel : "使用"
+RunForm --> JogButton : "使用"
+RunForm --> MathHelper : "调用"
+AxisLimitForm --> DroLabel : "使用"
+AxisLimitForm --> JogButton : "使用"
+AxisLimitForm --> MathHelper : "调用"
 UnifiedRunForm --> PlatformMotionService : "调用"
 RunForm --> PlatformMotionService : "调用"
 AxisLimitForm --> PlatformMotionService : "读取/验证"
@@ -183,11 +348,14 @@ PlatformMotionService --> AxisController : "协调"
 PlatformMotionService --> XyzControllerHub : "多轴联动"
 ```
 
-图表来源
+**图表来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [AxisLimitForm.cs](file://MainControl/AxisLimitForm.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
@@ -207,8 +375,9 @@ PlatformMotionService --> XyzControllerHub : "多轴联动"
 - 在 Initialize 中完成设置加载与服务实例化
 - 通过事件订阅实现 UI 与服务的双向通信
 - 确保线程安全：UI 更新需回到 UI 线程
+- **新增**：初始化共享控件库的资源管理器
 
-章节来源
+**章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 
 ### 统一运行界面（UnifiedRunForm）
@@ -216,45 +385,57 @@ PlatformMotionService --> XyzControllerHub : "多轴联动"
 - 提供一键式点动、绝对定位、回零、急停等操作
 - 实时显示轴位置、状态、报警信息
 - 与 PlatformMotionService 交互，执行运动命令
+- **新增**：使用共享控件库中的DroLabel、JogButton等组件
 
 交互逻辑：
 - 用户点击按钮触发对应运动命令
 - 界面根据服务返回的状态更新显示
 - 支持批量操作与快捷键
+- **新增**：共享控件的事件处理和状态同步
 
-章节来源
+**章节来源**
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
 - [UnifiedRunForm.Designer.cs](file://MainControl/UnifiedRunForm.Designer.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
 
 ### 独立运行界面（RunForm）
 职责：
 - 加载并执行任务（如点位序列、轨迹片段）
 - 支持任务暂停/恢复/中止
 - 与运动服务协作，保证任务执行的原子性与可恢复性
+- **新增**：使用共享控件进行数据展示和用户交互
 
 交互逻辑：
 - 选择任务后进入准备阶段（校验参数、预读限位）
 - 执行阶段按步骤推进，失败时自动重试或回退
 - 完成后输出结果与日志
+- **新增**：通过共享控件提供更丰富的用户界面
 
-章节来源
+**章节来源**
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [RunForm.Designer.cs](file://MainControl/RunForm.Designer.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [XYView.cs](file://Controls/XYView.cs)
 
 ### 限位配置界面（AxisLimitForm）
 职责：
 - 配置各轴的软限位（最小/最大位置）
 - 配置硬限位（使能、触发模式、消抖时间）
 - 保存前进行参数合法性校验与安全评估
+- **新增**：使用共享控件提升用户体验
 
 安全保护机制：
 - 软限位冲突检测（避免越界）
 - 硬限位优先级高于软限位
 - 修改后立即生效并写入持久化配置
+- **新增**：通过DroLabel实时显示当前限位值
 
-章节来源
+**章节来源**
 - [AxisLimitForm.cs](file://MainControl/AxisLimitForm.cs)
 - [AxisLimitForm.Designer.cs](file://MainControl/AxisLimitForm.Designer.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
 
 ### 设置类（MainControlGlobalSetting / MainControlProjectSetting）
 MainControlGlobalSetting（全局设置）常见选项：
@@ -271,7 +452,7 @@ MainControlProjectSetting（项目设置）常见选项：
 - 任务模板与默认参数
 - 权限与访问控制
 
-章节来源
+**章节来源**
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 
@@ -289,7 +470,7 @@ PlatformMotionAdapter：
 IMotionService：
 - 定义运动控制接口契约，便于替换实现
 
-章节来源
+**章节来源**
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
@@ -303,12 +484,12 @@ XyzControllerHub：
 - XYZ 三轴插补与联动
 - 轨迹规划与同步控制
 
-章节来源
+**章节来源**
 - [AxisController.cs](file://Logic/AxisController.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 
 ## 依赖关系分析
-MainControl 对 Logic 层存在明确依赖，UI 不直接访问硬件，所有运动指令均通过服务层下发。
+MainControl 对 Logic 层存在明确依赖，UI 不直接访问硬件，所有运动指令均通过服务层下发。**新增**：Controls目录下的共享控件库被所有UI组件引用，实现了UI功能的模块化。
 
 ```mermaid
 graph LR
@@ -319,9 +500,27 @@ S --> A["PlatformMotionAdapter"]
 S --> AC["AxisController"]
 S --> XH["XyzControllerHub"]
 S -.-> I["IMotionService"]
+U --> C1["DroLabel"]
+U --> C2["JogButton"]
+U --> C3["MathHelper"]
+U --> C4["PaintHelper"]
+U --> C5["XYView"]
+U --> C6["ZBarView"]
+R --> C1
+R --> C2
+R --> C3
+R --> C4
+R --> C5
+R --> C6
+L --> C1
+L --> C2
+L --> C3
+L --> C4
+L --> C5
+L --> C6
 ```
 
-图表来源
+**图表来源**
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [AxisLimitForm.cs](file://MainControl/AxisLimitForm.cs)
@@ -330,8 +529,14 @@ S -.-> I["IMotionService"]
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [XYView.cs](file://Controls/XYView.cs)
+- [ZBarView.cs](file://Controls/ZBarView.cs)
 
-章节来源
+**章节来源**
 - [MainControl.csproj](file://MainControl/MainControl.csproj)
 
 ## 性能考虑
@@ -340,6 +545,10 @@ S -.-> I["IMotionService"]
 - 异步执行：长耗时操作（如回零、轨迹执行）使用异步，避免阻塞 UI
 - 缓存热点数据：如轴当前位姿、限位阈值，减少重复计算
 - 资源释放：及时关闭连接、释放句柄，防止内存泄漏
+- **新增**：共享控件优化：
+  - 控件实例复用，避免频繁创建销毁
+  - 绘图操作批处理，减少重绘次数
+  - 数学计算结果缓存，提高响应速度
 
 [本节为通用指导，无需特定文件引用]
 
@@ -350,19 +559,29 @@ S -.-> I["IMotionService"]
 - 运动无响应：查看命令队列是否堵塞，检查急停状态与互锁条件
 - 界面卡顿：降低刷新频率，拆分耗时任务
 - 参数未生效：确认设置已保存并重新加载
+- **新增**：共享控件问题：
+  - 控件显示异常：检查控件初始化和属性设置
+  - 事件响应失效：确认事件订阅是否正确
+  - 性能问题：检查控件使用模式和资源占用
 
 调试建议：
 - 启用详细日志，记录命令与状态变更
 - 使用模拟器或回环模式验证逻辑
 - 分步验证：先单轴后多轴，先手动后自动
+- **新增**：控件调试：
+  - 使用Visual Studio设计器预览控件效果
+  - 添加控件状态日志输出
+  - 逐步验证控件功能完整性
 
-章节来源
+**章节来源**
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [AxisLimitForm.cs](file://MainControl/AxisLimitForm.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
 
 ## 结论
-MainControl 模块通过清晰的层次划分与完善的设置/限位机制，提供了稳定可靠的运动控制能力。开发者应遵循服务层抽象、事件驱动与异步执行的原则，结合合理的错误处理与性能优化策略，快速集成并扩展功能。
+MainControl 模块通过清晰的层次划分、完善的设置/限位机制以及**新增的共享控件库**，提供了稳定可靠的运动控制能力。重构为独立DLL架构后，模块具有更好的可重用性和可维护性。开发者应遵循服务层抽象、事件驱动与异步执行的原则，结合合理的错误处理与性能优化策略，快速集成并扩展功能。
 
 [本节为总结性内容，无需特定文件引用]
 
@@ -372,6 +591,10 @@ MainControl 模块通过清晰的层次划分与完善的设置/限位机制，�
   - 参考：[MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - 显示统一运行界面
   - 参考：[UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
+- 使用共享控件库
+  - DroLabel使用：[DroLabel.cs](file://Controls/DroLabel.cs)
+  - JogButton使用：[JogButton.cs](file://Controls/JogButton.cs)
+  - 数学工具：[MathHelper.cs](file://Controls/MathHelper.cs)
 - 执行点动与绝对定位
   - 参考：[PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - 配置限位参数并保存
@@ -381,7 +604,7 @@ MainControl 模块通过清晰的层次划分与完善的设置/限位机制，�
 - 全局与项目设置读写
   - 参考：[MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)、[MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 
-章节来源
+**章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
@@ -389,3 +612,6 @@ MainControl 模块通过清晰的层次划分与完善的设置/限位机制，�
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
+- [DroLabel.cs](file://Controls/DroLabel.cs)
+- [JogButton.cs](file://Controls/JogButton.cs)
+- [MathHelper.cs](file://Controls/MathHelper.cs)

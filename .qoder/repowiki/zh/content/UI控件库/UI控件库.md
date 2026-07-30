@@ -17,6 +17,13 @@
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 </cite>
 
+## 更新摘要
+**所做更改**
+- 更新了项目结构部分，反映UI控件库现在通过文件链接方式在三个DLL中共享
+- 新增了独立DLL构建说明章节，详细说明文件链接机制
+- 更新了依赖关系分析，体现多DLL架构下的控件共享模式
+- 完善了使用示例与最佳实践，包含跨DLL引用指南
+
 ## 目录
 1. [简介](#简介)
 2. [项目结构](#项目结构)
@@ -39,12 +46,31 @@
 - 响应式设计与可访问性：缩放、布局适配、键盘与屏幕阅读器支持
 - 跨浏览器兼容性说明：Windows Forms 环境下的兼容策略与注意事项
 
+**更新** 本项目现已采用多DLL架构，UI控件库通过文件链接方式在MainControl、PointJump、Trajectory三个DLL中共享，实现代码复用和模块化部署。
+
 ## 项目结构
 控件库位于 Controls 目录，包含数值显示、交互按钮、二维视图、高度指示器以及绘图与数学工具。业务集成通过 MainControl 模块中的表单与进程模块进行承载，逻辑层由 AxisController、AxisJogService、PlatformMotionService、XyzControllerHub 等提供运动控制能力。
 
+**更新** 项目现已重构为多DLL架构，UI控件库通过文件链接方式在三个独立的DLL项目中共享：
+
 ```mermaid
 graph TB
-subgraph "控件库(Controls)"
+subgraph "主程序(ProcessModules)"
+PM["ProcessModules<br/>主程序"]
+end
+subgraph "MainControl DLL"
+MC["MainControl.dll<br/>主控制面板"]
+MCC["Controls/ (文件链接)"]
+end
+subgraph "PointJump DLL"
+PJ["PointJump.dll<br/>点位跳转模块"]
+PJC["Controls/ (文件链接)"]
+end
+subgraph "Trajectory DLL"
+TR["Trajectory.dll<br/>轨迹规划模块"]
+TRC["Controls/ (文件链接)"]
+end
+subgraph "共享控件库(Controls)"
 DL["DroLabel<br/>数字显示"]
 JB["JogButton<br/>点动按钮"]
 XY["XYView<br/>二维视图"]
@@ -52,54 +78,54 @@ ZB["ZBarView<br/>高度指示器"]
 MH["MathHelper<br/>数学工具"]
 PH["PaintHelper<br/>绘图辅助"]
 end
-subgraph "主界面(MainControl)"
-MPM["MainControlProcessModule"]
-RF["RunForm"]
-URF["UnifiedRunForm"]
-end
-subgraph "逻辑层(Logic)"
-AC["AxisController"]
-AJS["AxisJogService"]
-PMS["PlatformMotionService"]
-XH["XyzControllerHub"]
-end
-DL --> PH
-JB --> PH
-XY --> PH
-ZB --> PH
-XY --> MH
-ZB --> MH
-RF --> DL
-RF --> JB
-RF --> XY
-RF --> ZB
-URF --> RF
-MPM --> RF
-RF --> AC
-AC --> AJS
-AJS --> PMS
-AC --> XH
+PM --> MC
+PM --> PJ
+PM --> TR
+MC --> MCC
+PJ --> PJC
+TR --> TRC
+MCC --> DL
+MCC --> JB
+MCC --> XY
+MCC --> ZB
+MCC --> MH
+MCC --> PH
+PJC --> DL
+PJC --> JB
+PJC --> XY
+PJC --> ZB
+PJC --> MH
+PJC --> PH
+TRC --> DL
+TRC --> JB
+TRC --> XY
+TRC --> ZB
+TRC --> MH
+TRC --> PH
 ```
 
-图表来源
-- [DroLabel.cs](file://Controls/DroLabel.cs)
-- [JogButton.cs](file://Controls/JogButton.cs)
-- [XYView.cs](file://Controls/XYView.cs)
-- [ZBarView.cs](file://Controls/ZBarView.cs)
-- [MathHelper.cs](file://Controls/MathHelper.cs)
-- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+**图表来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
-- [RunForm.cs](file://MainControl/RunForm.cs)
-- [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
-- [AxisJogService.cs](file://Logic/AxisJogService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
+- [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 
-章节来源
+### 独立DLL构建说明
+每个DLL项目都通过文件链接的方式引用相同的Controls目录，确保控件代码的唯一性和一致性：
+
+- **MainControl.dll**: 主控制面板模块，包含主要的用户界面和业务逻辑
+- **PointJump.dll**: 点位跳转模块，专注于点位定位功能
+- **Trajectory.dll**: 轨迹规划模块，负责轨迹生成和执行
+
+这种设计确保了：
+- 控件代码的单一维护点
+- 避免重复编译和版本不一致问题
+- 便于单元测试和控件测试
+- 支持插件化架构扩展
+
+**章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
-- [RunForm.cs](file://MainControl/RunForm.cs)
-- [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
+- [PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
+- [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 
 ## 核心控件
 本节聚焦四个关键控件的职责、常用属性、事件与绘制扩展点。
@@ -128,18 +154,20 @@ AC --> XH
   - 事件：阈值触发、越界告警、数值更新
   - 绘制：渐变填充、刻度线、指针与标签
 
-章节来源
+**章节来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
 - [ZBarView.cs](file://Controls/ZBarView.cs)
 
 ## 架构总览
-控件库采用“视图-工具-服务”分层：
+控件库采用"视图-工具-服务"分层：
 - 视图层：DroLabel、JogButton、XYView、ZBarView 负责 UI 呈现与交互
 - 工具层：MathHelper、PaintHelper 提供通用计算与绘制能力
 - 服务层：AxisController、AxisJogService、PlatformMotionService、XyzControllerHub 提供运动控制与状态同步
 - 界面集成：RunForm、UnifiedRunForm、MainControlProcessModule 将控件与业务逻辑装配
+
+**更新** 架构现已支持多DLL部署，控件库通过文件链接在多个DLL中共享，保持代码一致性的同时实现模块化。
 
 ```mermaid
 classDiagram
@@ -193,7 +221,7 @@ AxisJogService --> PlatformMotionService : "下发"
 AxisController --> XyzControllerHub : "协调"
 ```
 
-图表来源
+**图表来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
@@ -232,11 +260,11 @@ DrawText --> ApplyTheme["应用主题样式"]
 ApplyTheme --> End
 ```
 
-图表来源
+**图表来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 
-章节来源
+**章节来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 
@@ -271,12 +299,12 @@ Button->>Service : 停止点动
 Service->>Motion : 停止命令
 ```
 
-图表来源
+**图表来源**
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [AxisJogService.cs](file://Logic/AxisJogService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 
-章节来源
+**章节来源**
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [AxisJogService.cs](file://Logic/AxisJogService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
@@ -309,12 +337,12 @@ ApplyTheme --> UpdateUI["更新UI状态"]
 UpdateUI --> RenderLoop
 ```
 
-图表来源
+**图表来源**
 - [XYView.cs](file://Controls/XYView.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 
-章节来源
+**章节来源**
 - [XYView.cs](file://Controls/XYView.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
@@ -346,12 +374,12 @@ DrawPointer --> Animate["应用动画过渡"]
 Animate --> End["完成绘制"]
 ```
 
-图表来源
+**图表来源**
 - [ZBarView.cs](file://Controls/ZBarView.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 
-章节来源
+**章节来源**
 - [ZBarView.cs](file://Controls/ZBarView.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
@@ -364,7 +392,7 @@ Animate --> End["完成绘制"]
   - 绘制文本、网格、渐变、圆角矩形、阴影
   - 性能：双缓冲、裁剪区域、路径缓存
 
-章节来源
+**章节来源**
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 
@@ -374,6 +402,8 @@ Animate --> End["完成绘制"]
 - XYView、ZBarView 依赖 MathHelper 进行数值计算
 - JogButton 依赖 AxisJogService 进行点动控制
 - AxisController 协调 AxisJogService、PlatformMotionService、XyzControllerHub
+
+**更新** 依赖关系现已支持多DLL架构，控件库通过文件链接在MainControl、PointJump、Trajectory三个DLL中共享。
 
 ```mermaid
 graph LR
@@ -387,9 +417,21 @@ JB --> AJS["AxisJogService"]
 AC["AxisController"] --> AJS
 AJS --> PMS["PlatformMotionService"]
 AC --> XH["XyzControllerHub"]
+MC["MainControl.dll"] --> DL
+PJ["PointJump.dll"] --> DL
+TR["Trajectory.dll"] --> DL
+MC --> JB
+PJ --> JB
+TR --> JB
+MC --> XY
+PJ --> XY
+TR --> XY
+MC --> ZB
+PJ --> ZB
+TR --> ZB
 ```
 
-图表来源
+**图表来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
@@ -401,7 +443,7 @@ AC --> XH["XyzControllerHub"]
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 
-章节来源
+**章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)
@@ -420,6 +462,12 @@ AC --> XH["XyzControllerHub"]
   - 统一主题配置，避免重复创建画笔与画刷
   - 颜色与字体资源集中管理，便于切换与复用
 
+**更新** 在多DLL架构下，控件的性能优化需要考虑跨DLL调用的开销，建议：
+- 合理使用事件驱动而非轮询机制
+- 避免频繁的跨DLL边界调用
+- 利用静态缓存减少重复计算
+- 考虑异步更新和批处理操作
+
 [本节为通用指导，不直接分析具体文件]
 
 ## 故障排查指南
@@ -435,8 +483,12 @@ AC --> XH["XyzControllerHub"]
 - 高度指示不准确
   - 检查 ZBarView 的范围与刻度设置
   - 验证阈值与报警逻辑
+- 多DLL相关问题
+  - 确认控件文件链接正确配置
+  - 检查各DLL版本一致性
+  - 验证命名空间引用完整性
 
-章节来源
+**章节来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
@@ -445,14 +497,16 @@ AC --> XH["XyzControllerHub"]
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 
 ## 结论
-ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实现了数值显示、交互控制与专业视图的统一。通过 PaintHelper 与 MathHelper 的抽象，控件具备高可定制性与良好性能。结合业务逻辑层的运动控制服务，形成完整的“视图-工具-服务”架构，满足工业控制场景的高可靠性与高可用性需求。
+ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实现了数值显示、交互控制与专业视图的统一。通过 PaintHelper 与 MathHelper 的抽象，控件具备高可定制性与良好性能。结合业务逻辑层的运动控制服务，形成完整的"视图-工具-服务"架构，满足工业控制场景的高可靠性与高可用性需求。
+
+**更新** 多DLL架构的引入进一步提升了项目的可维护性和可扩展性，通过文件链接方式共享控件库，既保证了代码的一致性，又实现了模块化的部署和管理。
 
 [本节为总结，不直接分析具体文件]
 
 ## 附录：使用示例与最佳实践
 
 - 控件组合与复用
-  - 将 DroLabel 与 ZBarView 组合为“高度监控面板”，统一主题与刷新策略
+  - 将 DroLabel 与 ZBarView 组合为"高度监控面板"，统一主题与刷新策略
   - 使用容器控件封装 JogButton 组，提供方向键与快捷键映射
 - 数据绑定机制
   - 通过属性绑定将 AxisController 的位置数据绑定到 DroLabel
@@ -467,7 +521,22 @@ ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实�
   - Windows Forms 环境下，注意 GDI+ 与高分屏的兼容性
   - 避免使用非标准 API，确保在不同系统版本下的稳定性
 
-章节来源
+**更新** 多DLL架构下的最佳实践：
+
+- 跨DLL引用指南
+  - 确保所有DLL项目都正确链接到相同的Controls目录
+  - 使用统一的命名空间和类名，避免版本冲突
+  - 在解决方案级别统一管理控件库的版本
+- DLL部署策略
+  - 将Controls目录作为共享资源，避免重复复制
+  - 使用相对路径引用，提高部署灵活性
+  - 建立版本兼容性检查机制
+- 性能优化建议
+  - 减少跨DLL边界的频繁调用
+  - 使用事件总线模式进行模块间通信
+  - 合理设计接口，避免不必要的序列化开销
+
+**章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
 - [RunForm.cs](file://MainControl/RunForm.cs)
 - [UnifiedRunForm.cs](file://MainControl/UnifiedRunForm.cs)

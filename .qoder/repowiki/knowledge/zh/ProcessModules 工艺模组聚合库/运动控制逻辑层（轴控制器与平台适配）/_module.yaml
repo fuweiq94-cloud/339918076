@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: logic
+title: 运动控制逻辑层（轴控制器与平台适配）
+scope:
+    - Logic/
+source_files: []
+depends_on: []
+related_to:
+    - path: maincontrol/core
+    - path: maincontrol/forms
+    - path: pointjump/core_module
+    - path: trajectory_new

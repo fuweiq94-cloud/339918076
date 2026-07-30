@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: trajectory_new
+title: 轨迹查看工艺模块（Trajectory）
+scope:
+    - Trajectory/
+source_files: []
+depends_on: []
+related_to:
+    - path: logic

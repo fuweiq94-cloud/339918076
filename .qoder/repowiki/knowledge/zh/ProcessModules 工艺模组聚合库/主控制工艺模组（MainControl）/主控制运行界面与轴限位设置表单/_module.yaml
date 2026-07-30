@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: maincontrol/forms
+title: 主控制运行界面与轴限位设置表单
+scope:
+    - MainControl/AxisLimitForm.cs
+    - MainControl/RunForm.cs
+    - MainControl/UnifiedRunForm.cs
+source_files: []
+depends_on: []
+related_to:
+    - path: logic
+    - path: maincontrol/core

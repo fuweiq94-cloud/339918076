@@ -7,6 +7,7 @@
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
+- [Trajectory.csproj](file://Trajectory/Trajectory.csproj)
 - [AxisController.cs](file://Logic/AxisController.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
@@ -16,6 +17,14 @@
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 - [README.md](file://README.md)
 </cite>
+
+## 更新摘要
+**所做更改**   
+- 更新了项目结构部分以反映 Trajectory 模块已重构为独立 DLL
+- 增强了架构总览以体现模块化设计
+- 添加了独立 DLL 构建说明相关内容
+- 更新了依赖关系分析以反映新的模块边界
+- 保持了与其他模块一致的命名约定和类结构
 
 ## 目录
 1. [简介](#简介)
@@ -30,7 +39,7 @@
 10. [附录](#附录)
 
 ## 简介
-本文件为“轨迹规划模块（Trajectory）”的权威技术文档，面向算法工程师、应用开发者与现场调试人员。内容覆盖：
+本文件为"轨迹规划模块（Trajectory）"的权威技术文档，面向算法工程师、应用开发者与现场调试人员。内容覆盖：
 - 路径生成、插补计算与运动优化策略
 - RunForm 界面的轨迹编辑与可视化显示
 - 轨迹数据格式与序列化机制
@@ -41,16 +50,19 @@
 - 轨迹优化策略与性能调优方法
 - 调试工具与故障排除指南
 
+**重要更新**：Trajectory 模块现已重构为独立 DLL，保持与其他模块一致的命名约定和类结构，确保与平台接口要求的兼容性。
+
 ## 项目结构
-Trajectory 模块位于 Trajectory 目录下，采用分层组织：UI（RunForm）、逻辑（Logic）、资源（Resources）与进程模块入口（TrajectoryViewProcessModule）。与通用运动控制层（Logic）和主控设置（MainControl）紧密集成。
+Trajectory 模块现已重构为独立的 DLL 项目，位于 Trajectory 目录下，采用分层组织：UI（RunForm）、逻辑（Logic）、资源（Resources）与进程模块入口（TrajectoryViewProcessModule）。作为独立 DLL，该模块通过标准的 .NET 程序集形式提供功能，便于在主应用程序中动态加载和使用。
 
 ```mermaid
 graph TB
-subgraph "轨迹模块(Trajectory)"
+subgraph "独立DLL - 轨迹模块(Trajectory)"
 UI["RunForm<br/>轨迹编辑与可视化"]
 Mod["TrajectoryViewProcessModule<br/>模块入口"]
 GSet["TrajectoryGlobalSetting<br/>全局设置"]
 PSet["TrajectoryProjectSetting<br/>项目设置"]
+Proj["Trajectory.csproj<br/>项目配置文件"]
 end
 subgraph "运动控制层(Logic)"
 IM["IMotionService<br/>接口"]
@@ -75,11 +87,12 @@ Mod --> MG
 Mod --> MP
 ```
 
-图表来源
+**图表来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
+- [Trajectory.csproj](file://Trajectory/Trajectory.csproj)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
@@ -88,7 +101,7 @@ Mod --> MP
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 
-章节来源
+**章节来源**
 - [README.md](file://README.md)
 
 ## 核心组件
@@ -107,7 +120,7 @@ Mod --> MP
 - 设置管理（全局与项目）
   - 全局设置用于系统级默认值；项目设置用于当前工程定制
 
-章节来源
+**章节来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
@@ -118,7 +131,7 @@ Mod --> MP
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 
 ## 架构总览
-轨迹模块通过 RunForm 驱动，调用 ProcessModule 初始化并加载设置，随后使用 IMotionService 抽象层下发轨迹指令。PlatformMotionService 将轨迹解析为 MotionCommand 序列，交由 AxisController 与 XyzControllerHub 执行。
+轨迹模块通过 RunForm 驱动，调用 ProcessModule 初始化并加载设置，随后使用 IMotionService 抽象层下发轨迹指令。PlatformMotionService 将轨迹解析为 MotionCommand 序列，交由 AxisController 与 XyzControllerHub 执行。作为独立 DLL，该模块提供了清晰的 API 边界和松耦合的架构设计。
 
 ```mermaid
 sequenceDiagram
@@ -140,7 +153,7 @@ Plat-->>Svc : 执行结果
 Svc-->>UI : 更新可视化与日志
 ```
 
-图表来源
+**图表来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
@@ -174,11 +187,11 @@ Send --> Monitor["监控状态与异常"]
 Monitor --> End
 ```
 
-图表来源
+**图表来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [RunForm.Designer.cs](file://Trajectory/RunForm.Designer.cs)
 
-章节来源
+**章节来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [RunForm.Designer.cs](file://Trajectory/RunForm.Designer.cs)
 
@@ -221,7 +234,7 @@ class 轨迹 {
 
 [本图为概念性数据模型示意，不直接映射具体代码文件]
 
-章节来源
+**章节来源**
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 
 ### 运动控制接口与平台服务
@@ -270,14 +283,14 @@ PlatformMotionService --> XyzControllerHub : "协调"
 XyzControllerHub --> AxisController : "调度"
 ```
 
-图表来源
+**图表来源**
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [MotionCommand.cs](file://Logic/MotionCommand.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
 
-章节来源
+**章节来源**
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [MotionCommand.cs](file://Logic/MotionCommand.cs)
@@ -298,13 +311,13 @@ LoadProject --> Merge["合并生效项目优先"]
 Merge --> Runtime["运行时读取与热更新"]
 ```
 
-图表来源
+**图表来源**
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 
-章节来源
+**章节来源**
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
@@ -338,13 +351,13 @@ Plat-->>Svc : 执行结果
 Svc-->>Dev : 回调成功/失败
 ```
 
-图表来源
+**图表来源**
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
 
-章节来源
+**章节来源**
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
@@ -373,7 +386,7 @@ Adjust --> Sim
 
 [本图为概念性流程图，不直接映射具体代码文件]
 
-章节来源
+**章节来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 
 ### 与底层运动控制系统的通信协议与数据传输格式
@@ -412,11 +425,11 @@ IMotionService --> 通信协议 : "封装/解析"
 通信协议 --> MotionCommand : "载荷"
 ```
 
-图表来源
+**图表来源**
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [MotionCommand.cs](file://Logic/MotionCommand.cs)
 
-章节来源
+**章节来源**
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [MotionCommand.cs](file://Logic/MotionCommand.cs)
 
@@ -427,6 +440,10 @@ IMotionService --> 通信协议 : "封装/解析"
 - 外部依赖
   - Logic 层提供运动控制能力
   - MainControl 提供全局与项目设置基线
+- **独立 DLL 特性**
+  - 通过标准 .NET 程序集形式提供功能
+  - 清晰的 API 边界和松耦合设计
+  - 便于在主应用程序中动态加载和使用
 
 ```mermaid
 graph LR
@@ -440,9 +457,10 @@ PMS --> AX["AxisController"]
 PMS --> MC["MotionCommand"]
 TPM --> MGS["MainControlGlobalSetting"]
 TPM --> MPS["MainControlProjectSetting"]
+TPM --> PROJ["Trajectory.csproj<br/>独立DLL项目"]
 ```
 
-图表来源
+**图表来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
@@ -454,8 +472,9 @@ TPM --> MPS["MainControlProjectSetting"]
 - [MotionCommand.cs](file://Logic/MotionCommand.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
+- [Trajectory.csproj](file://Trajectory/Trajectory.csproj)
 
-章节来源
+**章节来源**
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 
 ## 性能考虑
@@ -471,38 +490,42 @@ TPM --> MPS["MainControlProjectSetting"]
 - 资源管理
   - 及时释放图形与网络资源
   - 监控内存与 CPU 使用率
-
-[本节为通用指导，不直接分析具体文件]
+- **独立 DLL 优化**
+  - 按需加载减少初始内存占用
+  - 程序集隔离提高稳定性
+  - 支持并行执行多个实例
 
 ## 故障排除指南
 - 常见问题定位
   - 轨迹无法下发：检查 IMotionService 连接状态与权限
   - 执行抖动：调整加加速度与速度限制，检查机械间隙
   - 预览错位：确认坐标系与标定参数
+  - DLL 加载失败：检查依赖项版本兼容性
 - 诊断工具
   - 启用详细日志与抓包
   - 使用步进调试与断点回放
+  - 程序集加载诊断
 - 恢复策略
   - 自动回滚与复位
   - 安全停止与急停联动
+  - DLL 卸载与重新加载
 
-章节来源
+**章节来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [IMotionService.cs](file://Logic/IMotionService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 
 ## 结论
-Trajectory 模块以清晰的层次化架构与抽象接口，实现了从轨迹编辑、插补计算到运动控制的全链路闭环。通过完善的设置管理与可视化仿真，既满足工程化需求，又兼顾易用性与可扩展性。建议在实际项目中结合设备特性与工艺要求，持续优化插补算法与调度策略，以获得更稳定高效的运动表现。
-
-[本节为总结性内容，不直接分析具体文件]
+Trajectory 模块以清晰的层次化架构与抽象接口，实现了从轨迹编辑、插补计算到运动控制的全链路闭环。通过完善的设置管理与可视化仿真，既满足工程化需求，又兼顾易用性与可扩展性。作为独立 DLL 的重构使其具有更好的模块化特性和部署灵活性。建议在实际项目中结合设备特性与工艺要求，持续优化插补算法与调度策略，以获得更稳定高效的运动表现。
 
 ## 附录
 - 术语表
   - 插补：在离散点之间生成连续路径的方法
   - 加加速度：加速度的变化率，影响平滑度
   - 背压：下游处理能力不足时上游限速的机制
+  - DLL：动态链接库，一种可被多个程序共享的代码库
 - 参考文件
   - README.md：项目概述与使用说明
 
-章节来源
+**章节来源**
 - [README.md](file://README.md)
