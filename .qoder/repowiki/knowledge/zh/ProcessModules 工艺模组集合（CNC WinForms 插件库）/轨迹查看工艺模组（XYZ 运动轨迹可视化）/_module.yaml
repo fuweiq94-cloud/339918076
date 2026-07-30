@@ -1,9 +1,12 @@
 schema_version: 1
 module_path: trajectory_new
-title: 轨迹查看工艺模块（Trajectory）
+title: 轨迹查看工艺模组（XYZ 运动轨迹可视化）
 scope:
     - Trajectory/
 source_files: []
 depends_on: []
 related_to:
+    - path: controls
+    - path: domo
     - path: logic
+    - path: maincontrol/forms

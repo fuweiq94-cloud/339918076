@@ -5,4 +5,7 @@ scope:
     - DOMO/
 source_files: []
 depends_on: []
-related_to: []
+related_to:
+    - path: maincontrol
+    - path: pointjump/core_module
+    - path: trajectory_new

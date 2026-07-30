@@ -26,11 +26,11 @@
 
 ## 更新摘要
 **变更内容**   
-- 更新了项目结构说明，反映PointJump模块现在是独立的PointJump.dll
-- 增强了独立DLL架构的详细说明，包含完整的Controls目录结构
-- 更新了依赖关系分析以体现模块化设计
+- 更新了项目结构说明，反映PointJump模块现已完全独立，拥有自己的Logic目录实现点跳功能
+- 增强了独立DLL架构的详细说明，包含完整的Logic目录结构和UI控件集
+- 更新了依赖关系分析以体现模块化设计和独立部署能力
 - 增加了独立部署和集成的指导说明
-- 补充了Controls目录下各控件的功能说明
+- 补充了Logic目录下核心类的功能说明，包括AxisController.cs、PlatformMotionService.cs等
 
 ## 目录
 1. [简介](#简介)
@@ -45,7 +45,7 @@
 10. [附录](#附录)
 
 ## 简介
-本文件为"点位跳转模块（PointJump）"的完整技术文档，面向开发者与集成人员。PointJump模块现已重构为独立的PointJump.dll，具有完整的自包含功能，可单独部署和使用。该模块采用与MainControl相同的模块化结构，包含独立的Controls目录和PresetPoint功能。内容涵盖：
+本文件为"点位跳转模块（PointJump）"的完整技术文档，面向开发者与集成人员。PointJump模块现已重构为完全独立的PointJump.dll，拥有自己的Logic目录实现点跳功能，包括AxisController.cs、PlatformMotionService.cs等核心类，以及完整的UI控件集。该模块采用自包含的模块化设计，可单独部署和使用，同时保持与MainControl相同的架构风格。内容涵盖：
 - 点位管理的核心功能：预设点位的创建、编辑、删除与调用
 - RunForm 界面的操作流程与用户交互方式
 - PresetPoint 数据结构与点位存储机制
@@ -57,7 +57,7 @@
 - 调试技巧与常见问题解决方案
 
 ## 项目结构
-PointJump模块现在是一个完全独立的.NET类库项目，位于PointJump目录下，包含界面、逻辑与资源；同时根目录提供共享的数据模型（如PresetPoint）。其他关键目录包括MainControl（主运行界面）、Logic（运动控制抽象与服务），以及各模块的独立设置类。
+PointJump模块现在是一个完全独立的.NET类库项目，位于PointJump目录下，包含界面、逻辑与资源；同时根目录提供共享的数据模型（如PresetPoint）。关键特色是拥有独立的Logic目录，实现了完整的运动控制功能，包括AxisController.cs、PlatformMotionService.cs等核心类。其他关键目录包括MainControl（主运行界面），以及各模块的独立设置类。
 
 ```mermaid
 graph TB
@@ -68,6 +68,17 @@ PJPS["PointJumpProjectSetting.cs"]
 PJRF_D["RunForm.Designer.cs"]
 PJRF_R["RunForm.resx"]
 PJPROJ["PointJump.csproj"]
+end
+subgraph "PointJump.Logic (独立运动控制)"
+AC["AxisController.cs"]
+PMS["PlatformMotionService.cs"]
+XHUB["XyzControllerHub.cs"]
+IMC["IMotionService.cs"]
+MC["MotionCommand.cs"]
+AXPOS["AxisPosition.cs"]
+JOG["JogMode.cs"]
+AJOG["AxisJogService.cs"]
+PMA["PlatformMotionAdapter.cs"]
 end
 subgraph "PointJump.Controls"
 DRO["DroLabel.cs"]
@@ -81,11 +92,6 @@ subgraph "MainControl"
 MC_GLOBAL["MainControlGlobalSetting.cs"]
 MC_PROJECT["MainControlProjectSetting.cs"]
 MC_RF["RunForm.cs"]
-end
-subgraph "Logic"
-PMS["PlatformMotionService.cs"]
-AC["AxisController.cs"]
-XHUB["XyzControllerHub.cs"]
 end
 RootPP["PresetPoint.cs"]
 PJPROJ --> PJPM
@@ -103,6 +109,12 @@ PJPM --> MATH
 PJPM --> PAINT
 PJPM --> XYV
 PJPM --> ZBAR
+PJPM --> IMC
+PJPM --> MC
+PJPM --> AXPOS
+PJPM --> JOG
+PJPM --> AJOG
+PJPM --> PMA
 MC_RF --> PMS
 MC_RF --> AC
 MC_RF --> XHUB
@@ -121,12 +133,18 @@ MC_RF --> XHUB
 - [PointJump/Controls/PaintHelper.cs](file://PointJump/Controls/PaintHelper.cs)
 - [PointJump/Controls/XYView.cs](file://PointJump/Controls/XYView.cs)
 - [PointJump/Controls/ZBarView.cs](file://PointJump/Controls/ZBarView.cs)
-- [MainControl/MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
-- [MainControl/MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
-- [MainControl/RunForm.cs](file://MainControl/RunForm.cs)
 - [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [Logic/AxisController.cs](file://Logic/AxisController.cs)
 - [Logic/XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [Logic/IMotionService.cs](file://Logic/IMotionService.cs)
+- [Logic/MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [Logic/AxisPosition.cs](file://Logic/AxisPosition.cs)
+- [Logic/JogMode.cs](file://Logic/JogMode.cs)
+- [Logic/AxisJogService.cs](file://Logic/AxisJogService.cs)
+- [Logic/PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
+- [MainControl/MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
+- [MainControl/MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
+- [MainControl/RunForm.cs](file://MainControl/RunForm.cs)
 - [PresetPoint.cs](file://PresetPoint.cs)
 
 章节来源
@@ -139,7 +157,7 @@ MC_RF --> XHUB
 - **设置类**：PointJumpGlobalSetting、PointJumpProjectSetting分别承载全局与项目级配置（如默认单位、坐标系、速度限制、安全参数等）。
 - **界面**：RunForm提供点位的可视化列表、选择、编辑与执行入口。
 - **自定义控件**：Controls目录包含DroLabel、JogButton、XYView、ZBarView等专用控件，提供数值显示、手动操作、二维视图等功能。
-- **运动服务**：PlatformMotionService、AxisController、XyzControllerHub封装底层硬件接口，提供绝对定位、速度/加速度、插补与状态同步能力。
+- **运动服务**：Logic目录包含完整的运动控制实现，包括PlatformMotionService、AxisController、XyzControllerHub等核心类，封装底层硬件接口，提供绝对定位、速度/加速度、插补与状态同步能力。
 
 **章节来源**
 - [PresetPoint.cs](file://PresetPoint.cs)
@@ -156,27 +174,27 @@ MC_RF --> XHUB
 - [Logic/XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
 
 ## 架构总览
-PointJump采用"UI-业务-运动服务"的分层架构，现已完全独立为PointJump.dll模块：
+PointJump采用"UI-业务-运动服务"的分层架构，现已完全独立为PointJump.dll模块，拥有自己的Logic目录实现完整的运动控制功能：
 - **UI层（RunForm）**：展示点位列表、接收用户操作（新增/编辑/删除/执行），并调用ProcessModule提供的API。
 - **业务层（PointJumpProcessModule）**：维护点位集合与项目设置，校验输入，协调运动服务完成跳转。
-- **运动服务层（PlatformMotionService/AxisController/XyzControllerHub）**：屏蔽硬件差异，统一坐标与速度语义，返回执行结果与状态。
+- **运动服务层（Logic目录）**：包含PlatformMotionService、AxisController、XyzControllerHub等核心类，屏蔽硬件差异，统一坐标与速度语义，返回执行结果与状态。
 
 ```mermaid
 sequenceDiagram
 participant UI as "RunForm(界面)"
 participant PM as "PointJumpProcessModule"
 participant PP as "PresetPoint(数据模型)"
-participant MS as "PlatformMotionService"
-participant AX as "AxisController"
-participant HUB as "XyzControllerHub"
+participant PMS as "PlatformMotionService"
+participant AC as "AxisController"
+participant XHUB as "XyzControllerHub"
 UI->>PM : "获取点位列表/添加/编辑/删除"
 PM-->>UI : "返回点位集合/操作结果"
 UI->>PM : "执行点位跳转(目标点, 速度, 模式)"
 PM->>PP : "校验目标点有效性"
-PM->>MS : "请求绝对定位/多轴联动"
-MS->>AX : "下发轴命令(速度/位置)"
-AX-->>MS : "状态反馈/完成事件"
-MS-->>PM : "执行结果"
+PM->>PMS : "请求绝对定位/多轴联动"
+PMS->>AC : "下发轴命令(速度/位置)"
+AC-->>PMS : "状态反馈/完成事件"
+PMS-->>PM : "执行结果"
 PM-->>UI : "更新状态/提示"
 ```
 
@@ -253,6 +271,30 @@ class PresetPoint {
 - [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
 - [PointJump/RunForm.resx](file://PointJump/RunForm.resx)
 
+### Logic目录核心类详解
+**更新** PointJump模块现在拥有独立的Logic目录，实现了完整的运动控制功能：
+
+- **PlatformMotionService**：统一的运动服务接口，提供绝对定位、相对移动、插补运动等功能，封装重试与超时机制
+- **AxisController**：单轴控制器，负责单个轴的速度、位置、回零、使能/失能等基础控制
+- **XyzControllerHub**：XYZ三轴协调控制器，确保多轴同步运动和顺序约束
+- **IMotionService**：运动服务接口定义，抽象底层硬件差异
+- **MotionCommand**：运动命令封装，包含目标位置、速度、加速度等参数
+- **AxisPosition**：轴位置数据结构，记录当前实际位置和状态信息
+- **JogMode**：点动模式枚举，定义不同的手动操作模式
+- **AxisJogService**：轴点动服务，处理手动点动操作的逻辑
+- **PlatformMotionAdapter**：平台运动适配器，适配不同硬件平台的运动控制接口
+
+**章节来源**
+- [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
+- [Logic/AxisController.cs](file://Logic/AxisController.cs)
+- [Logic/XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [Logic/IMotionService.cs](file://Logic/IMotionService.cs)
+- [Logic/MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [Logic/AxisPosition.cs](file://Logic/AxisPosition.cs)
+- [Logic/JogMode.cs](file://Logic/JogMode.cs)
+- [Logic/AxisJogService.cs](file://Logic/AxisJogService.cs)
+- [Logic/PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
+
 ### Controls目录控件详解
 **更新** PointJump模块现在包含完整的Controls目录，提供丰富的自定义控件：
 
@@ -300,7 +342,7 @@ class PresetPoint {
 - **模块内依赖**
   - RunForm依赖PointJumpProcessModule
   - PointJumpProcessModule依赖PresetPoint、PointJumpProjectSetting、PointJumpGlobalSetting
-  - PointJumpProcessModule依赖PlatformMotionService、AxisController、XyzControllerHub
+  - PointJumpProcessModule依赖Logic目录下的PlatformMotionService、AxisController、XyzControllerHub等核心类
   - RunForm依赖Controls目录下的自定义控件
 - **跨模块依赖**
   - MainControl.RunForm同样依赖Logic层运动服务，用于通用运行流程
@@ -316,6 +358,12 @@ PM --> PPS["PointJumpProjectSetting"]
 PM --> PMS["PlatformMotionService"]
 PMS --> AC["AxisController"]
 PMS --> XHUB["XyzControllerHub"]
+PM --> IMC["IMotionService"]
+PM --> MC["MotionCommand"]
+PM --> AXPOS["AxisPosition"]
+PM --> JOG["JogMode"]
+PM --> AJOG["AxisJogService"]
+PM --> PMA["PlatformMotionAdapter"]
 RF --> DRO["DroLabel"]
 RF --> JOGB["JogButton"]
 RF --> XYV["XYView"]
@@ -337,6 +385,12 @@ PJPROJ --> PMS
 - [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [Logic/AxisController.cs](file://Logic/AxisController.cs)
 - [Logic/XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [Logic/IMotionService.cs](file://Logic/IMotionService.cs)
+- [Logic/MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [Logic/AxisPosition.cs](file://Logic/AxisPosition.cs)
+- [Logic/JogMode.cs](file://Logic/JogMode.cs)
+- [Logic/AxisJogService.cs](file://Logic/AxisJogService.cs)
+- [Logic/PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
 - [MainControl/RunForm.cs](file://MainControl/RunForm.cs)
 - [PointJump/PointJump.csproj](file://PointJump/PointJump.csproj)
 - [PointJump/Controls/DroLabel.cs](file://PointJump/Controls/DroLabel.cs)
@@ -355,6 +409,7 @@ PJPROJ --> PMS
 - **运动控制**
   - 合理设置速度/加速度，避免频繁启停导致抖动
   - 异步执行与事件回调，避免阻塞UI线程
+  - Logic目录中的运动服务采用优化算法，减少不必要的计算
 - **数据持久化**
   - 增量保存与压缩，降低磁盘占用与I/O压力
 - **线程安全**
@@ -369,22 +424,25 @@ PJPROJ --> PMS
   - 运动失败：查看轴状态、限位、使能、通信状态
   - 界面无响应：确认事件订阅与线程切换是否正确
   - 控件显示异常：检查数据绑定和更新机制
+  - Logic层错误：检查运动服务初始化、硬件连接状态
 - **调试技巧**
   - 开启详细日志，记录命令下发与回调
   - 使用只读模式验证点位与路径，再切换到执行模式
   - 逐步缩小问题范围：先单轴测试，再多轴联动
   - 监控控件状态和数据流
+  - 使用Logic目录中的诊断工具检查运动状态
 - **恢复策略**
   - 回退到上一个稳定项目设置
   - 重置轴状态与报警，重新回零
   - 重建控件实例和事件订阅
+  - 重启Logic层的运动服务
 
 **章节来源**
 - [PointJump/PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
 - [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 
 ## 结论
-PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现了点位的可视化管理与可靠跳转。现已重构为独立的PointJump.dll，具有完整的自包含功能，包含独立的Controls目录和PresetPoint功能，既满足日常快速定位需求，也支持复杂场景下的批量与程序化控制。建议在生产环境中结合日志与监控，持续优化速度与路径参数，确保稳定性与效率。
+PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现了点位的可视化管理与可靠跳转。现已重构为完全独立的PointJump.dll，拥有自己的Logic目录实现点跳功能，包括AxisController.cs、PlatformMotionService.cs等核心类，以及完整的UI控件集。这种自包含的设计既满足日常快速定位需求，也支持复杂场景下的批量与程序化控制。建议在生产环境中结合日志与监控，持续优化速度与路径参数，确保稳定性与效率。
 
 ## 附录
 
@@ -441,6 +499,7 @@ PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现�
 - **配置隔离**：全局设置与项目设置完全独立
 - **版本管理**：可独立升级PointJump.dll而不影响其他模块
 - **Controls集成**：自定义控件可直接在WinForms项目中重用
+- **Logic集成**：独立的Logic目录提供完整的运动控制功能，无需外部依赖
 
 **章节来源**
 - [PointJump/PointJump.csproj](file://PointJump/PointJump.csproj)
@@ -461,3 +520,25 @@ PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现�
 - [PointJump/Controls/ZBarView.cs](file://PointJump/Controls/ZBarView.cs)
 - [PointJump/Controls/MathHelper.cs](file://PointJump/Controls/MathHelper.cs)
 - [PointJump/Controls/PaintHelper.cs](file://PointJump/Controls/PaintHelper.cs)
+
+### Logic目录类使用指南
+- **PlatformMotionService**：主要的运动服务接口，提供统一的运动控制API
+- **AxisController**：单轴控制的基础类，适合简单的单轴应用场景
+- **XyzControllerHub**：多轴协调控制器，适合复杂的XYZ三轴联动场景
+- **IMotionService**：运动服务接口定义，便于扩展和替换不同的硬件实现
+- **MotionCommand**：运动命令封装，用于传递运动参数和状态信息
+- **AxisPosition**：轴位置数据结构，记录轴的当前位置和状态
+- **JogMode**：点动模式枚举，定义不同的手动操作模式
+- **AxisJogService**：轴点动服务，处理手动点动操作的逻辑
+- **PlatformMotionAdapter**：平台运动适配器，用于适配不同硬件平台的运动控制接口
+
+**章节来源**
+- [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
+- [Logic/AxisController.cs](file://Logic/AxisController.cs)
+- [Logic/XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [Logic/IMotionService.cs](file://Logic/IMotionService.cs)
+- [Logic/MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [Logic/AxisPosition.cs](file://Logic/AxisPosition.cs)
+- [Logic/JogMode.cs](file://Logic/JogMode.cs)
+- [Logic/AxisJogService.cs](file://Logic/AxisJogService.cs)
+- [Logic/PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)

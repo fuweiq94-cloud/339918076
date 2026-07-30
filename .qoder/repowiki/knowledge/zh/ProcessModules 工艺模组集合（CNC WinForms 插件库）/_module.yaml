@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: ""
-title: ProcessModules 工艺模组聚合库
+title: ProcessModules 工艺模组集合（CNC WinForms 插件库）
 scope:
     - ProcessModules.sln
     - ProcessModules.csproj

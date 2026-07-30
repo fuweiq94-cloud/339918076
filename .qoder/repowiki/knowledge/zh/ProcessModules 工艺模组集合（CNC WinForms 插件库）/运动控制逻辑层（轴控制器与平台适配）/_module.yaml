@@ -6,7 +6,6 @@ scope:
 source_files: []
 depends_on: []
 related_to:
-    - path: maincontrol/core
-    - path: maincontrol/forms
-    - path: pointjump/core_module
+    - path: maincontrol
+    - path: pointjump
     - path: trajectory_new

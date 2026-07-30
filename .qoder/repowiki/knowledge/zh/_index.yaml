@@ -3,11 +3,11 @@ schema_version: 1
 locale: zh-CN
 branch: main
 nodes_managed: true
-exported_at: "2026-07-28T00:24:30Z"
+exported_at: "2026-07-30T17:42:01Z"
 modules:
     "":
-        dir_name: ProcessModules 工艺模组聚合库
-        title: ProcessModules 工艺模组聚合库
+        dir_name: ProcessModules 工艺模组集合（CNC WinForms 插件库）
+        title: ProcessModules 工艺模组集合（CNC WinForms 插件库）
         scope:
             - ProcessModules.sln
             - ProcessModules.csproj
@@ -39,7 +39,10 @@ modules:
         source_files: []
         children: []
         depends_on: []
-        related_to: []
+        related_to:
+            - path: maincontrol/forms
+            - path: pointjump/core_module
+            - path: trajectory_new
     domo:
         dir_name: DOMO 工艺模组示例
         title: DOMO 工艺模组示例
@@ -48,7 +51,10 @@ modules:
         source_files: []
         children: []
         depends_on: []
-        related_to: []
+        related_to:
+            - path: maincontrol
+            - path: pointjump/core_module
+            - path: trajectory_new
     logic:
         dir_name: 运动控制逻辑层（轴控制器与平台适配）
         title: 运动控制逻辑层（轴控制器与平台适配）
@@ -58,13 +64,12 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: maincontrol/core
-            - path: maincontrol/forms
-            - path: pointjump/core_module
+            - path: maincontrol
+            - path: pointjump
             - path: trajectory_new
     maincontrol:
-        dir_name: 主控制工艺模组（MainControl）
-        title: 主控制工艺模组（MainControl）
+        dir_name: 主控制工艺模组（XYZ_U 三轴手动控制）
+        title: 主控制工艺模组（XYZ/U 三轴手动控制）
         scope:
             - MainControl/
         source_files: []
@@ -72,7 +77,9 @@ modules:
             - maincontrol/core
             - maincontrol/forms
         depends_on: []
-        related_to: []
+        related_to:
+            - path: domo
+            - path: logic
     maincontrol/core:
         dir_name: 主控制工艺模组（XYZ三轴手动控制）
         title: 主控制工艺模组（XYZ三轴手动控制）
@@ -85,8 +92,7 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: logic
-            - path: maincontrol/forms
+            - path: pointjump/core_module
     maincontrol/forms:
         dir_name: 主控制运行界面与轴限位设置表单
         title: 主控制运行界面与轴限位设置表单
@@ -98,18 +104,19 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: logic
-            - path: maincontrol/core
+            - path: controls
+            - path: trajectory_new
     pointjump:
-        dir_name: 点位跳转工艺模组（PointJump）
-        title: 点位跳转工艺模组（PointJump）
+        dir_name: PointJump 点位跳转工艺模块
+        title: PointJump 点位跳转工艺模块
         scope:
             - PointJump/
         source_files: []
         children:
             - pointjump/core_module
         depends_on: []
-        related_to: []
+        related_to:
+            - path: logic
     pointjump/core_module:
         dir_name: 点位跳转工艺模组（PointJump）
         title: 点位跳转工艺模组（PointJump）
@@ -122,14 +129,19 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: logic
+            - path: controls
+            - path: domo
+            - path: maincontrol/core
     trajectory_new:
-        dir_name: 轨迹查看工艺模块（Trajectory）
-        title: 轨迹查看工艺模块（Trajectory）
+        dir_name: 轨迹查看工艺模组（XYZ 运动轨迹可视化）
+        title: 轨迹查看工艺模组（XYZ 运动轨迹可视化）
         scope:
             - Trajectory/
         source_files: []
         children: []
         depends_on: []
         related_to:
+            - path: controls
+            - path: domo
             - path: logic
+            - path: maincontrol/forms

@@ -8,5 +8,5 @@ scope:
 source_files: []
 depends_on: []
 related_to:
-    - path: logic
-    - path: maincontrol/core
+    - path: controls
+    - path: trajectory_new

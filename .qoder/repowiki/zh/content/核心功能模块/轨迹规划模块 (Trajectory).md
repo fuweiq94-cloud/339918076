@@ -8,22 +8,21 @@
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 - [Trajectory.csproj](file://Trajectory/Trajectory.csproj)
-- [AxisController.cs](file://Logic/AxisController.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
-- [README.md](file://README.md)
 </cite>
 
 ## 更新摘要
 **所做更改**   
-- 更新了项目结构部分以反映 Trajectory 模块已重构为独立 DLL
-- 增强了架构总览以体现模块化设计
+- 更新了项目结构部分以反映 Trajectory 模块现已完全独立，包含完整的轨迹规划逻辑、运动服务和可视化组件
+- 增强了架构总览以体现自给自足的模块化架构设计
 - 添加了独立 DLL 构建说明相关内容
-- 更新了依赖关系分析以反映新的模块边界
+- 更新了依赖关系分析以反映新的模块边界和内部化特性
 - 保持了与其他模块一致的命名约定和类结构
 
 ## 目录
@@ -50,28 +49,28 @@
 - 轨迹优化策略与性能调优方法
 - 调试工具与故障排除指南
 
-**重要更新**：Trajectory 模块现已重构为独立 DLL，保持与其他模块一致的命名约定和类结构，确保与平台接口要求的兼容性。
+**重要更新**：Trajectory 模块现已完全独立，包含完整的轨迹规划逻辑、运动服务和可视化组件，实现了自给自足的模块化架构。该模块通过标准的 .NET 程序集形式提供功能，便于在主应用程序中动态加载和使用，具有清晰的 API 边界和松耦合的设计特点。
 
 ## 项目结构
-Trajectory 模块现已重构为独立的 DLL 项目，位于 Trajectory 目录下，采用分层组织：UI（RunForm）、逻辑（Logic）、资源（Resources）与进程模块入口（TrajectoryViewProcessModule）。作为独立 DLL，该模块通过标准的 .NET 程序集形式提供功能，便于在主应用程序中动态加载和使用。
+Trajectory 模块现已重构为完全独立的 DLL 项目，位于 Trajectory 目录下，采用分层组织：UI（RunForm）、逻辑（Logic）、资源（Resources）与进程模块入口（TrajectoryViewProcessModule）。作为完全独立的模块，该模块包含了完整的轨迹规划逻辑、运动服务和可视化组件，实现了自给自足的模块化架构。
 
 ```mermaid
 graph TB
-subgraph "独立DLL - 轨迹模块(Trajectory)"
+subgraph "完全独立DLL - 轨迹模块(Trajectory)"
 UI["RunForm<br/>轨迹编辑与可视化"]
 Mod["TrajectoryViewProcessModule<br/>模块入口"]
 GSet["TrajectoryGlobalSetting<br/>全局设置"]
 PSet["TrajectoryProjectSetting<br/>项目设置"]
-Proj["Trajectory.csproj<br/>项目配置文件"]
+Proj["Trajectory.csproj<br/>独立项目配置文件"]
 end
-subgraph "运动控制层(Logic)"
+subgraph "内部运动控制层(Logic)"
 IM["IMotionService<br/>接口"]
 AMS["PlatformMotionService<br/>平台运动服务"]
 AC["AxisController<br/>轴控制器"]
 MC["MotionCommand<br/>运动命令"]
 XYZ["XyzControllerHub<br/>XYZ协调器"]
 end
-subgraph "主控设置(MainControl)"
+subgraph "外部主控设置(MainControl)"
 MG["MainControlGlobalSetting<br/>全局设置"]
 MP["MainControlProjectSetting<br/>项目设置"]
 end
@@ -93,16 +92,13 @@ Mod --> MP
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 - [Trajectory.csproj](file://Trajectory/Trajectory.csproj)
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
-
-**章节来源**
-- [README.md](file://README.md)
 
 ## 核心组件
 - 轨迹编辑器与可视化（RunForm）
@@ -123,15 +119,15 @@ Mod --> MP
 **章节来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
 
 ## 架构总览
-轨迹模块通过 RunForm 驱动，调用 ProcessModule 初始化并加载设置，随后使用 IMotionService 抽象层下发轨迹指令。PlatformMotionService 将轨迹解析为 MotionCommand 序列，交由 AxisController 与 XyzControllerHub 执行。作为独立 DLL，该模块提供了清晰的 API 边界和松耦合的架构设计。
+轨迹模块通过 RunForm 驱动，调用 ProcessModule 初始化并加载设置，随后使用 IMotionService 抽象层下发轨迹指令。PlatformMotionService 将轨迹解析为 MotionCommand 序列，交由 AxisController 与 XyzControllerHub 执行。作为完全独立的 DLL，该模块提供了清晰的 API 边界和松耦合的架构设计，实现了自给自足的模块化特性。
 
 ```mermaid
 sequenceDiagram
@@ -156,10 +152,10 @@ Svc-->>UI : 更新可视化与日志
 **图表来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
 
 ## 详细组件分析
 
@@ -284,18 +280,18 @@ XyzControllerHub --> AxisController : "调度"
 ```
 
 **图表来源**
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
 
 **章节来源**
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
 
 ### 设置管理（全局与项目）
 - 全局设置（TrajectoryGlobalSetting / MainControlGlobalSetting）
@@ -352,16 +348,16 @@ Svc-->>Dev : 回调成功/失败
 ```
 
 **图表来源**
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
 
 **章节来源**
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
 
 ### 轨迹仿真与预览实现原理
 - 仿真引擎
@@ -426,24 +422,26 @@ IMotionService --> 通信协议 : "封装/解析"
 ```
 
 **图表来源**
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
 
 **章节来源**
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
 
 ## 依赖关系分析
 - 模块内依赖
   - RunForm 依赖 TrajectoryViewProcessModule 与设置类
   - ProcessModule 依赖 IMotionService 抽象层
 - 外部依赖
-  - Logic 层提供运动控制能力
+  - Logic 层提供运动控制能力（已内部化）
   - MainControl 提供全局与项目设置基线
-- **独立 DLL 特性**
+- **完全独立 DLL 特性**
   - 通过标准 .NET 程序集形式提供功能
   - 清晰的 API 边界和松耦合设计
   - 便于在主应用程序中动态加载和使用
+  - 包含完整的轨迹规划逻辑、运动服务和可视化组件
+  - 实现了自给自足的模块化架构
 
 ```mermaid
 graph LR
@@ -457,7 +455,7 @@ PMS --> AX["AxisController"]
 PMS --> MC["MotionCommand"]
 TPM --> MGS["MainControlGlobalSetting"]
 TPM --> MPS["MainControlProjectSetting"]
-TPM --> PROJ["Trajectory.csproj<br/>独立DLL项目"]
+TPM --> PROJ["Trajectory.csproj<br/>完全独立DLL项目"]
 ```
 
 **图表来源**
@@ -465,11 +463,11 @@ TPM --> PROJ["Trajectory.csproj<br/>独立DLL项目"]
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 - [TrajectoryGlobalSetting.cs](file://Trajectory/TrajectoryGlobalSetting.cs)
 - [TrajectoryProjectSetting.cs](file://Trajectory/TrajectoryProjectSetting.cs)
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
-- [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [AxisController.cs](file://Logic/AxisController.cs)
-- [MotionCommand.cs](file://Logic/MotionCommand.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
+- [XyzControllerHub.cs](file://Trajectory/Logic/XyzControllerHub.cs)
+- [AxisController.cs](file://Trajectory/Logic/AxisController.cs)
+- [MotionCommand.cs](file://Trajectory/Logic/MotionCommand.cs)
 - [MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 - [Trajectory.csproj](file://Trajectory/Trajectory.csproj)
@@ -490,10 +488,11 @@ TPM --> PROJ["Trajectory.csproj<br/>独立DLL项目"]
 - 资源管理
   - 及时释放图形与网络资源
   - 监控内存与 CPU 使用率
-- **独立 DLL 优化**
+- **完全独立 DLL 优化**
   - 按需加载减少初始内存占用
   - 程序集隔离提高稳定性
   - 支持并行执行多个实例
+  - 内部化的运动控制逻辑减少了跨模块调用开销
 
 ## 故障排除指南
 - 常见问题定位
@@ -512,11 +511,11 @@ TPM --> PROJ["Trajectory.csproj<br/>独立DLL项目"]
 
 **章节来源**
 - [RunForm.cs](file://Trajectory/RunForm.cs)
-- [IMotionService.cs](file://Logic/IMotionService.cs)
-- [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
+- [IMotionService.cs](file://Trajectory/Logic/IMotionService.cs)
+- [PlatformMotionService.cs](file://Trajectory/Logic/PlatformMotionService.cs)
 
 ## 结论
-Trajectory 模块以清晰的层次化架构与抽象接口，实现了从轨迹编辑、插补计算到运动控制的全链路闭环。通过完善的设置管理与可视化仿真，既满足工程化需求，又兼顾易用性与可扩展性。作为独立 DLL 的重构使其具有更好的模块化特性和部署灵活性。建议在实际项目中结合设备特性与工艺要求，持续优化插补算法与调度策略，以获得更稳定高效的运动表现。
+Trajectory 模块以清晰的层次化架构与抽象接口，实现了从轨迹编辑、插补计算到运动控制的全链路闭环。通过完善的设置管理与可视化仿真，既满足工程化需求，又兼顾易用性与可扩展性。作为完全独立的 DLL，该模块包含了完整的轨迹规划逻辑、运动服务和可视化组件，实现了自给自足的模块化架构，具有更好的模块化特性和部署灵活性。建议在实际项目中结合设备特性与工艺要求，持续优化插补算法与调度策略，以获得更稳定高效的运动表现。
 
 ## 附录
 - 术语表
@@ -524,6 +523,7 @@ Trajectory 模块以清晰的层次化架构与抽象接口，实现了从轨迹
   - 加加速度：加速度的变化率，影响平滑度
   - 背压：下游处理能力不足时上游限速的机制
   - DLL：动态链接库，一种可被多个程序共享的代码库
+  - 模块化架构：将系统划分为独立、可复用的模块的设计模式
 - 参考文件
   - README.md：项目概述与使用说明
 
