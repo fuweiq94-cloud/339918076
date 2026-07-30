@@ -365,7 +365,8 @@ namespace MainControlProcessModule
                 xyView.TargetX = _hub.X.Target;
                 xyView.TargetY = _hub.Y.Target;
                 zBar.TargetZ = _hub.Z.Target;
-                // 当前值不能直接赋（CurrentX/Y/Z 是只读），靠 animTimer 推进后视图自己刷新
+                uView.TargetAngle = _hub.U.Target;  // U 轴目标角度
+                // 当前值不能直接赋（CurrentX/Y/Z/U 是只读），靠 animTimer 推进后视图自己刷新
             }
             finally { _syncing = false; }
         }
@@ -382,8 +383,11 @@ namespace MainControlProcessModule
             xyView.YMax = gs.YMax;
             zBar.RangeMin = gs.ZMin;
             zBar.RangeMax = gs.ZMax;
+            uView.RangeMin = (float)(gs.UMin * 180.0 / Math.PI);  // U 轴：弧度 → 角度单位
+            uView.RangeMax = (float)(gs.UMax * 180.0 / Math.PI);
             xyView.Invalidate();
             zBar.Invalidate();
+            uView.Invalidate();  // U 轴表盘重绘
         }
 
         // ============== 定时刷新 ==============
@@ -393,6 +397,7 @@ namespace MainControlProcessModule
             // 定时器仅用于周期性刷新视图（将后端报告的实际位置显示到控件）。
             xyView.UpdateActual(_hub.X.Current, _hub.Y.Current);
             zBar.UpdateActual(_hub.Z.Current);
+            uView.UpdateActual(_hub.U.Current);  // U 轴实际角度更新
 
             UpdateStatusLive();
         }

@@ -22,6 +22,9 @@ namespace MainControlProcessModule
         // —— Z 视图（自定义控件）——
         private ZBarView zBar;
 
+        // —— U 轴圆形表盘（新增）——
+        private URotationView uView;
+
         // —— X 轴组 ——
         private System.Windows.Forms.GroupBox grpX;
         private System.Windows.Forms.TrackBar trbX;
@@ -105,6 +108,7 @@ namespace MainControlProcessModule
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.xyView = new XYView();
             this.zBar = new ZBarView();
+            this.uView = new URotationView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpCommon = new System.Windows.Forms.GroupBox();
             this.tlpCommon = new System.Windows.Forms.TableLayoutPanel();
@@ -190,8 +194,9 @@ namespace MainControlProcessModule
             // splitMain.Panel2
             // 
             this.splitMain.Panel2.Controls.Add(this.zBar);
+            this.splitMain.Panel2.Controls.Add(this.uView);
             this.splitMain.Panel2.Padding = new System.Windows.Forms.Padding(12, 18, 12, 18);
-            this.splitMain.Panel2MinSize = 80;
+            this.splitMain.Panel2MinSize = 350;
             this.splitMain.Size = new System.Drawing.Size(1754, 1253);
             this.splitMain.SplitterDistance = 1660;
             this.splitMain.SplitterWidth = 6;
