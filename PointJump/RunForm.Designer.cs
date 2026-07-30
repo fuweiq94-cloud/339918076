@@ -13,14 +13,14 @@ namespace PointJumpProcessModule
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY 视图 ——
-        private PointJumpProcessModule.XYView xyView;
+        private XYView xyView;
 
         // —— 实时坐标 DRO ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
-        private PointJumpProcessModule.DroLabel droX;
-        private PointJumpProcessModule.DroLabel droY;
-        private PointJumpProcessModule.DroLabel droZ;
+        private DroLabel droX;
+        private DroLabel droY;
+        private DroLabel droZ;
 
         // —— 目标坐标输入 ——
         private System.Windows.Forms.GroupBox grpTarget;
@@ -73,7 +73,7 @@ namespace PointJumpProcessModule
         {
             this.components = new System.ComponentModel.Container();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.xyView = new PointJumpProcessModule.XYView();
+            this.xyView = new XYView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpSpeed = new System.Windows.Forms.GroupBox();
             this.tlpSpeed = new System.Windows.Forms.TableLayoutPanel();
@@ -100,9 +100,9 @@ namespace PointJumpProcessModule
             this.btnJump = new System.Windows.Forms.Button();
             this.grpDro = new System.Windows.Forms.GroupBox();
             this.tlpDro = new System.Windows.Forms.TableLayoutPanel();
-            this.droX = new PointJumpProcessModule.DroLabel();
-            this.droY = new PointJumpProcessModule.DroLabel();
-            this.droZ = new PointJumpProcessModule.DroLabel();
+            this.droX = new DroLabel();
+            this.droY = new DroLabel();
+            this.droZ = new DroLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.animTimer = new System.Windows.Forms.Timer(this.components);

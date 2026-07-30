@@ -63,34 +63,20 @@
       <DependentUpon>AxisLimitForm.cs</DependentUpon>
     </Compile>
     <!-- 公共业务层（每个模块都需要） -->
-    <Compile Include="..\Logic\AxisController.cs">
-      <Link>Logic\AxisController.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\AxisJogService.cs">
-      <Link>Logic\AxisJogService.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\AxisPosition.cs">
-      <Link>Logic\AxisPosition.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\IMotionService.cs">
-      <Link>Logic\IMotionService.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\XyzControllerHub.cs">
-      <Link>Logic\XyzControllerHub.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\JogMode.cs">
-      <Link>Logic\JogMode.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\MotionCommand.cs">
-      <Link>Logic\MotionCommand.cs</Link>
-    </Compile>
+    <Compile Include="Logic\AxisController.cs" />
+    <Compile Include="Logic\AxisJogService.cs" />
+    <Compile Include="Logic\AxisPosition.cs" />
+    <Compile Include="Logic\IMotionService.cs" />
+    <Compile Include="Logic\XyzControllerHub.cs" />
+    <Compile Include="Logic\JogMode.cs" />
+    <Compile Include="Logic\MotionCommand.cs" />
     <!-- 自定义控件 -->
-    <Compile Include="XYView.cs" />
-    <Compile Include="ZBarView.cs" />
-    <Compile Include="DroLabel.cs" />
-    <Compile Include="JogButton.cs" />
-    <Compile Include="PaintHelper.cs" />
-    <Compile Include="MathHelper.cs" />
+    <Compile Include="Controls\XYView.cs" />
+    <Compile Include="Controls\ZBarView.cs" />
+    <Compile Include="Controls\DroLabel.cs" />
+    <Compile Include="Controls\JogButton.cs" />
+    <Compile Include="Controls\PaintHelper.cs" />
+    <Compile Include="Controls\MathHelper.cs" />
     <!-- 公共类 -->
     <Compile Include="PresetPoint.cs" />
   </ItemGroup>

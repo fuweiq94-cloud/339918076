@@ -13,17 +13,17 @@ namespace TrajectoryViewProcessModule
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY 视图（轨迹显示）——
-        private TrajectoryViewProcessModule.XYView xyView;
+        private XYView xyView;
 
         // —— Z 轴视图 ——
-        private TrajectoryViewProcessModule.ZBarView zBar;
+        private ZBarView zBar;
 
         // —— 实时坐标 DRO ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
-        private TrajectoryViewProcessModule.DroLabel droX;
-        private TrajectoryViewProcessModule.DroLabel droY;
-        private TrajectoryViewProcessModule.DroLabel droZ;
+        private DroLabel droX;
+        private DroLabel droY;
+        private DroLabel droZ;
 
         // —— 轨迹控制 ——
         private System.Windows.Forms.GroupBox grpTrail;
@@ -68,14 +68,14 @@ namespace TrajectoryViewProcessModule
         {
             this.components = new System.ComponentModel.Container();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.xyView = new TrajectoryViewProcessModule.XYView();
-            this.zBar = new TrajectoryViewProcessModule.ZBarView();
+            this.xyView = new XYView();
+            this.zBar = new ZBarView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpDro = new System.Windows.Forms.GroupBox();
             this.tlpDro = new System.Windows.Forms.TableLayoutPanel();
-            this.droX = new TrajectoryViewProcessModule.DroLabel();
-            this.droY = new TrajectoryViewProcessModule.DroLabel();
-            this.droZ = new TrajectoryViewProcessModule.DroLabel();
+            this.droX = new DroLabel();
+            this.droY = new DroLabel();
+            this.droZ = new DroLabel();
             this.grpTrail = new System.Windows.Forms.GroupBox();
             this.tlpTrail = new System.Windows.Forms.TableLayoutPanel();
             this.cbShowTrail = new System.Windows.Forms.CheckBox();

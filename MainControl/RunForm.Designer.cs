@@ -16,11 +16,11 @@ namespace MainControlProcessModule
         private System.Windows.Forms.SplitContainer splitMain;
         private System.Windows.Forms.Panel pnlRight;
 
-        // —— XY 视图（自定义控件，来自本类库 Controls）——
-        private MainControlProcessModule.XYView xyView;
+        // —— XY 视图（自定义控件）——
+        private XYView xyView;
 
         // —— Z 视图（自定义控件）——
-        private MainControlProcessModule.ZBarView zBar;
+        private ZBarView zBar;
 
         // —— X 轴组 ——
         private System.Windows.Forms.GroupBox grpX;
@@ -64,12 +64,12 @@ namespace MainControlProcessModule
         private System.Windows.Forms.Label lblAxisHdrX;
         private System.Windows.Forms.Label lblAxisHdrY;
         private System.Windows.Forms.Label lblAxisHdrZ;
-        private MainControlProcessModule.JogButton jogXMinus;
-        private MainControlProcessModule.JogButton jogXPlus;
-        private MainControlProcessModule.JogButton jogYMinus;
-        private MainControlProcessModule.JogButton jogYPlus;
-        private MainControlProcessModule.JogButton jogZMinus;
-        private MainControlProcessModule.JogButton jogZPlus;
+        private JogButton jogXMinus;
+        private JogButton jogXPlus;
+        private JogButton jogYMinus;
+        private JogButton jogYPlus;
+        private JogButton jogZMinus;
+        private JogButton jogZPlus;
         private System.Windows.Forms.Button btnEStop;
 
         // —— 状态栏 ——
@@ -103,8 +103,8 @@ namespace MainControlProcessModule
         {
             this.components = new System.ComponentModel.Container();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.xyView = new MainControlProcessModule.XYView();
-            this.zBar = new MainControlProcessModule.ZBarView();
+            this.xyView = new XYView();
+            this.zBar = new ZBarView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpCommon = new System.Windows.Forms.GroupBox();
             this.tlpCommon = new System.Windows.Forms.TableLayoutPanel();
@@ -123,14 +123,14 @@ namespace MainControlProcessModule
             this.nudJogStep = new System.Windows.Forms.NumericUpDown();
             this.btnEStop = new System.Windows.Forms.Button();
             this.lblAxisHdrX = new System.Windows.Forms.Label();
-            this.jogXMinus = new MainControlProcessModule.JogButton();
-            this.jogXPlus = new MainControlProcessModule.JogButton();
+            this.jogXMinus = new JogButton();
+            this.jogXPlus = new JogButton();
             this.lblAxisHdrY = new System.Windows.Forms.Label();
-            this.jogYMinus = new MainControlProcessModule.JogButton();
-            this.jogYPlus = new MainControlProcessModule.JogButton();
+            this.jogYMinus = new JogButton();
+            this.jogYPlus = new JogButton();
             this.lblAxisHdrZ = new System.Windows.Forms.Label();
-            this.jogZMinus = new MainControlProcessModule.JogButton();
-            this.jogZPlus = new MainControlProcessModule.JogButton();
+            this.jogZMinus = new JogButton();
+            this.jogZPlus = new JogButton();
             this.grpZ = new System.Windows.Forms.GroupBox();
             this.btnZMinus = new System.Windows.Forms.Button();
             this.trbZ = new System.Windows.Forms.TrackBar();

@@ -51,42 +51,27 @@
       <DependentUpon>RunForm.cs</DependentUpon>
     </Compile>
     <!-- 公共业务层（每个模块都需要） -->
-    <Compile Include="..\Logic\AxisController.cs">
-      <Link>Logic\AxisController.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\AxisPosition.cs">
-      <Link>Logic\AxisPosition.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\IMotionService.cs">
-      <Link>Logic\IMotionService.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\XyzControllerHub.cs">
-      <Link>Logic\XyzControllerHub.cs</Link>
-    </Compile>
-    <Compile Include="..\Logic\MotionCommand.cs">
-      <Link>Logic\MotionCommand.cs</Link>
-    </Compile>
+    <Compile Include="Logic\AxisController.cs" />
+    <Compile Include="Logic\AxisPosition.cs" />
+    <Compile Include="Logic\IMotionService.cs" />
+    <Compile Include="Logic\XyzControllerHub.cs" />
+    <Compile Include="Logic\MotionCommand.cs" />
     <!-- 自定义控件 -->
-    <Compile Include="XYView.cs" />
-    <Compile Include="ZBarView.cs" />
-    <Compile Include="DroLabel.cs" />
-    <Compile Include="JogButton.cs" />
-    <Compile Include="PaintHelper.cs" />
-    <Compile Include="MathHelper.cs" />
+    <Compile Include="Controls\XYView.cs" />
+    <Compile Include="Controls\ZBarView.cs" />
+    <Compile Include="Controls\DroLabel.cs" />
+    <Compile Include="Controls\JogButton.cs" />
+    <Compile Include="Controls\PaintHelper.cs" />
+    <Compile Include="Controls\MathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RunForm.resx">
       <DependentUpon>RunForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\Resources\XYView.bmp">
-      <Link>Resources\XYView.bmp</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Resources\ZBarView.bmp">
-      <Link>Resources\ZBarView.bmp</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Resources\DroLabel.bmp">
-      <Link>Resources\DroLabel.bmp</Link>
-    </EmbeddedResource>
+    <!-- 嵌入式资源 -->
+    <EmbeddedResource Include="Resources\XYView.bmp" />
+    <EmbeddedResource Include="Resources\ZBarView.bmp" />
+    <EmbeddedResource Include="Resources\DroLabel.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
