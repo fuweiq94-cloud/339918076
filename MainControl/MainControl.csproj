@@ -24,12 +24,14 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>2</WarningLevel>
+    <NoWarn>CS0234</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <NoWarn>CS0234</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
