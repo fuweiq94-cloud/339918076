@@ -73,6 +73,8 @@ namespace MainControlProcessModule
         private JogButton jogYPlus;
         private JogButton jogZMinus;
         private JogButton jogZPlus;
+        private JogButton jogUMinus;  // U 轴负向
+        private JogButton jogUPlus;   // U 轴正向
         private System.Windows.Forms.Button btnEStop;
 
         // —— 状态栏 ——
@@ -135,6 +137,9 @@ namespace MainControlProcessModule
             this.lblAxisHdrZ = new System.Windows.Forms.Label();
             this.jogZMinus = new JogButton();
             this.jogZPlus = new JogButton();
+            this.lblAxisHeaderU = new Label();  // U 轴标签
+            this.jogUMinus = new JogButton();   // U 轴负向 JOG
+            this.jogUPlus = new JogButton();    // U 轴正向 JOG
             this.grpZ = new System.Windows.Forms.GroupBox();
             this.btnZMinus = new System.Windows.Forms.Button();
             this.trbZ = new System.Windows.Forms.TrackBar();
@@ -402,16 +407,20 @@ namespace MainControlProcessModule
             this.tlpJog.Controls.Add(this.lblAxisHdrZ, 0, 3);
             this.tlpJog.Controls.Add(this.jogZMinus, 1, 3);
             this.tlpJog.Controls.Add(this.jogZPlus, 2, 3);
+            this.tlpJog.Controls.Add(this.lblAxisHeaderU, 0, 4);  // U 轴标签
+            this.tlpJog.Controls.Add(this.jogUMinus, 1, 5);       // U 轴负向
+            this.tlpJog.Controls.Add(this.jogUPlus, 2, 5);        // U 轴正向
             this.tlpJog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpJog.Location = new System.Drawing.Point(6, 30);
             this.tlpJog.Margin = new System.Windows.Forms.Padding(4);
             this.tlpJog.Name = "tlpJog";
-            this.tlpJog.RowCount = 5;
+            this.tlpJog.RowCount = 6;
             this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 48F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tlpJog.Size = new System.Drawing.Size(736, 339);
             this.tlpJog.TabIndex = 0;
             // 
@@ -606,6 +615,44 @@ namespace MainControlProcessModule
             this.jogZPlus.Size = new System.Drawing.Size(247, 70);
             this.jogZPlus.TabIndex = 12;
             this.jogZPlus.Text = "△ Z+";
+            // 
+            // lblAxisHeaderU
+            // 
+            this.lblAxisHeaderU.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAxisHeaderU.Location = new System.Drawing.Point(4, 278);
+            this.lblAxisHeaderU.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblAxisHeaderU.Name = "lblAxisHeaderU";
+            this.lblAxisHeaderU.Size = new System.Drawing.Size(82, 68);
+            this.lblAxisHeaderU.TabIndex = 13;
+            this.lblAxisHeaderU.Text = "U 轴";
+            this.lblAxisHeaderU.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // jogUMinus
+            // 
+            this.jogUMinus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(243)))), ((int)(((byte)(248)))));
+            this.jogUMinus.Direction = -1;
+            this.jogUMinus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jogUMinus.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.jogUMinus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(80)))));
+            this.jogUMinus.Location = new System.Drawing.Point(94, 282);
+            this.jogUMinus.Margin = new System.Windows.Forms.Padding(4);
+            this.jogUMinus.Name = "jogUMinus";
+            this.jogUMinus.Size = new System.Drawing.Size(247, 68);
+            this.jogUMinus.TabIndex = 14;
+            this.jogUMinus.Text = "↺ U-";
+            // 
+            // jogUPlus
+            // 
+            this.jogUPlus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(243)))), ((int)(((byte)(248)))));
+            this.jogUPlus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jogUPlus.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.jogUPlus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(80)))));
+            this.jogUPlus.Location = new System.Drawing.Point(349, 282);
+            this.jogUPlus.Margin = new System.Windows.Forms.Padding(4);
+            this.jogUPlus.Name = "jogUPlus";
+            this.jogUPlus.Size = new System.Drawing.Size(247, 68);
+            this.jogUPlus.TabIndex = 15;
+            this.jogUPlus.Text = "↻ U+";
             // 
             // grpZ
             // 

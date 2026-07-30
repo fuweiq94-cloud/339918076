@@ -181,6 +181,8 @@ namespace MainControlProcessModule
             BindJogButton(jogYMinus, _jogServices[1]);
             BindJogButton(jogZPlus, _jogServices[2]);
             BindJogButton(jogZMinus, _jogServices[2]);
+            BindJogButton(jogUPlus, _jogServices[3]);   // U 轴正向
+            BindJogButton(jogUMinus, _jogServices[3]);   // U 轴负向
 
             // 急停按钮
             btnEStop.Click += new EventHandler(BtnEStop_Click);
