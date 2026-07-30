@@ -286,6 +286,9 @@ namespace TrajectoryViewProcessModule
             droY.SetValue(_hub.Y.Current);
             droZ.SetValue(_hub.Z.Current);
 
+            // 更新软限位距离显示
+            UpdateLimitDistances();
+
             UpdateStatusLive();
             UpdateTrailInfo();
         }
@@ -315,6 +318,32 @@ namespace TrajectoryViewProcessModule
             else if (v < 90) label = "速度：快";
             else label = "速度：瞬时";
             lblSpeed.Text = label;
+        }
+
+        /// <summary>
+        /// 计算并更新各轴距软限位的剩余距离。
+        /// 正值 = 距上限位距离，负值 = 距下限位距离
+        /// </summary>
+        private void UpdateLimitDistances()
+        {
+            if (limitDistView == null) return;
+
+            // X 轴
+            float xMinRemain = _hub.X.Current - _hub.X.Min;  // 距下限位
+            float xMaxRemain = _hub.X.Max - _hub.X.Current; // 距上限位
+            float xRemaining = (_hub.X.Current <= (_hub.X.Min + _hub.X.Max) / 2) ? -xMinRemain : xMaxRemain;
+
+            // Y 轴
+            float yMinRemain = _hub.Y.Current - _hub.Y.Min;
+            float yMaxRemain = _hub.Y.Max - _hub.Y.Current;
+            float yRemaining = (_hub.Y.Current <= (_hub.Y.Min + _hub.Y.Max) / 2) ? -yMinRemain : yMaxRemain;
+
+            // Z 轴
+            float zMinRemain = _hub.Z.Current - _hub.Z.Min;
+            float zMaxRemain = _hub.Z.Max - _hub.Z.Current;
+            float zRemaining = (_hub.Z.Current <= (_hub.Z.Min + _hub.Z.Max) / 2) ? -zMinRemain : zMaxRemain;
+
+            limitDistView.UpdateDistances(xRemaining, yRemaining, zRemaining, 0f);  // Trajectory 只有 XYZ 三轴
         }
     }
 }

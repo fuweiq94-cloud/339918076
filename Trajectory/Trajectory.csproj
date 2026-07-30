@@ -61,6 +61,7 @@
     <!-- 自定义控件 -->
     <Compile Include="Controls\XYView.cs" />
     <Compile Include="Controls\ZBarView.cs" />
+    <Compile Include="Controls\LimitDistanceView.cs" />
     <Compile Include="Controls\DroLabel.cs" />
     <Compile Include="Controls\JogButton.cs" />
     <Compile Include="Controls\PaintHelper.cs" />

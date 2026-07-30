@@ -15,6 +15,9 @@ namespace TrajectoryViewProcessModule
         // —— XY 视图（轨迹显示）——
         private XYView xyView;
 
+        // —— 软限位距离显示 ——
+        private LimitDistanceView limitDistView;
+
         // —— Z 轴视图 ——
         private ZBarView zBar;
 
@@ -70,6 +73,7 @@ namespace TrajectoryViewProcessModule
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.xyView = new XYView();
             this.zBar = new ZBarView();
+            this.limitDistView = new LimitDistanceView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpDro = new System.Windows.Forms.GroupBox();
             this.tlpDro = new System.Windows.Forms.TableLayoutPanel();
@@ -121,6 +125,8 @@ namespace TrajectoryViewProcessModule
             // splitMain.Panel1
             // 
             this.splitMain.Panel1.Controls.Add(this.xyView);
+            this.splitMain.Panel1.Controls.Add(this.zBar);
+            this.splitMain.Panel1.Controls.Add(this.limitDistView);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(12);
             this.splitMain.Panel1MinSize = 200;
             // 

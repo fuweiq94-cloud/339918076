@@ -15,6 +15,9 @@ namespace PointJumpProcessModule
         // —— XY 视图 ——
         private XYView xyView;
 
+        // —— 软限位距离显示 ——
+        private LimitDistanceView limitDistView;
+
         // —— 实时坐标 DRO ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
@@ -74,6 +77,7 @@ namespace PointJumpProcessModule
             this.components = new System.ComponentModel.Container();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.xyView = new XYView();
+            this.limitDistView = new LimitDistanceView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.grpSpeed = new System.Windows.Forms.GroupBox();
             this.tlpSpeed = new System.Windows.Forms.TableLayoutPanel();
@@ -103,6 +107,7 @@ namespace PointJumpProcessModule
             this.droX = new DroLabel();
             this.droY = new DroLabel();
             this.droZ = new DroLabel();
+            this.limitDistView = new LimitDistanceView();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.animTimer = new System.Windows.Forms.Timer(this.components);
@@ -137,6 +142,7 @@ namespace PointJumpProcessModule
             // splitMain.Panel1
             // 
             this.splitMain.Panel1.Controls.Add(this.xyView);
+            this.splitMain.Panel1.Controls.Add(this.limitDistView);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(12);
             this.splitMain.Panel1MinSize = 200;
             // 
