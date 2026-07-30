@@ -57,16 +57,38 @@ msbuild ProcessModules.sln /p:Configuration=Release
 | MainControl/ | MainControl.dll | MainControlProcessModule | XYZ 三轴手动控制 |
 | Trajectory/ | Trajectory.dll | TrajectoryViewProcessModule | 轨迹查看 |
 
-根目录 `ProcessModules.csproj` 是合并项目（包含所有文件），三个子项目通过 `<Compile Include="..\Logic\...">` 链接共享代码。
+根目录不再有合并项目，三个模组完全独立：
 
-### 每个模组的标准组成
+### 每个模组的完整结构
 
-```
-ModuleName/
-├── ModuleNameProcessModule.cs   ← 继承 ProcessModuleBase，模组入口
-├── ModuleNameGlobalSetting.cs   ← 全局参数（XML 序列化，路径: AppParamPath/ProcessModule/Name/）
-├── ModuleNameProjectSetting.cs  ← 项目参数（XML 序列化，路径: ProjectPath/Name/）
-└── RunForm.cs                   ← 运行界面（嵌入平台 Panel 显示）
+```rnModuleName/
+├── Logic/                      ← 运动控制核心业务层
+│   ├── AxisController.cs       ← 单轴状态管理
+│   ├── AxisJogService.cs       ← JOG 寸动服务
+│   ├── AxisPosition.cs         ← 位置数据结构
+│   ├── IMotionService.cs       ← 硬件抽象接口
+│   ├── JogMode.cs              ← JOG 模式枚举
+│   ├── MotionCommand.cs        ← 统一指令结构
+│   ├── PlatformMotionAdapter.cs
+│   ├── PlatformMotionService.cs
+│   └── XyzControllerHub.cs     ← XYZU四轴统一控制器
+├── Controls/                   ← 自定义 WinForms 控件
+│   ├── XYView.cs               ← XY 平面视图
+│   ├── ZBarView.cs             ← Z 轴条状视图
+│   ├── DroLabel.cs             ← DRO 数码管标签
+│   ├── JogButton.cs            ← JOG 操作按钮
+│   ├── MathHelper.cs           ← 数学工具类
+│   └── PaintHelper.cs          ← 绘图工具类
+├── Resources/                  ← 资源位图
+│   ├── XYView.bmp
+│   ├── ZBarView.bmp
+│   ├── DroLabel.bmp
+│   └── JogButton.bmp
+├── ModuleNameProcessModule.cs  ← 继承 ProcessModuleBase，模组入口
+├── ModuleNameGlobalSetting.cs  ← 全局参数（XML 序列化）
+├── ModuleNameProjectSetting.cs ← 项目参数（XML 序列化）
+├── RunForm.cs                  ← 运行界面（嵌入平台 Panel 显示）
+└── RunForm.Designer.cs         ← 设计器文件
 ```
 
 ### ProcessModuleBase 生命周期（必须 override 的方法）
@@ -88,12 +110,24 @@ PlatformMotionAdapter（桥接平台 DLL 的 moveABS/movejump/movego/movehoome�
 - 前端严禁使用模拟位置数据，`Current` 值全部来自后端 `PositionUpdated` 事件推送
 - 替换后端只需注入不同 `IMotionService` 实现，Hub 和 UI 无需修改
 
-### 共享代码（Logic/ 和 Controls/）
+### 扁平化架构优势
 
-- `Logic/`：AxisController、AxisJogService、XyzControllerHub、IMotionService、MotionCommand 等
-- `Controls/`：XYView、ZBarView、DroLabel、JogButton 等自定义 WinForms 控件
+- **完全独立**：每个模组包含完整的 Logic、Controls、Resources 代码，无需外部依赖
+- **易于维护**：修改某模组代码时，不会影响其他模组
+- **便于分发**：可以单独编译、测试、部署任意模组
+- **清晰边界**：每个模组的职责边界清晰，无隐式共享状态
 
-这些文件通过 csproj `<Link>` 方式被各模组项目引用，修改时影响所有模组。
+### 共享代码机制变更
+
+**之前**：根目录`Logic/`和`Controls/`文件夹被三个模组通过`<Compile Include="..\Logic\...">`共享
+
+**现在**：每个模组在自己的子目录中包含完整的 Logic 和 Controls 代码副本，.csproj 直接引用本地路径
+
+```xml
+<!-- MainControl.csproj -->
+<Compile Include="Logic\AxisController.cs" />
+<Compile Include="Controls\XYView.cs" />
+```
 
 ## Critical Rules
 
