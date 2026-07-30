@@ -381,7 +381,7 @@ namespace MainControlProcessModule
             this.grpJog.Margin = new System.Windows.Forms.Padding(4);
             this.grpJog.Name = "grpJog";
             this.grpJog.Padding = new System.Windows.Forms.Padding(6);
-            this.grpJog.Size = new System.Drawing.Size(748, 375);
+            this.grpJog.Size = new System.Drawing.Size(748, 480);
             this.grpJog.TabIndex = 5;
             this.grpJog.TabStop = false;
             this.grpJog.Text = "JOG 控制（按住按钮移动）";
@@ -407,21 +407,22 @@ namespace MainControlProcessModule
             this.tlpJog.Controls.Add(this.lblAxisHdrZ, 0, 3);
             this.tlpJog.Controls.Add(this.jogZMinus, 1, 3);
             this.tlpJog.Controls.Add(this.jogZPlus, 2, 3);
-            this.tlpJog.Controls.Add(this.lblAxisHeaderU, 0, 4);  // U 轴标签
-            this.tlpJog.Controls.Add(this.jogUMinus, 1, 5);       // U 轴负向
-            this.tlpJog.Controls.Add(this.jogUPlus, 2, 5);        // U 轴正向
+            this.tlpJog.Controls.Add(this.lblAxisHeaderU, 0, 5);  // U 轴标签
+            this.tlpJog.Controls.Add(this.jogUMinus, 1, 6);       // U 轴负向
+            this.tlpJog.Controls.Add(this.jogUPlus, 2, 6);        // U 轴正向
             this.tlpJog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpJog.Location = new System.Drawing.Point(6, 30);
             this.tlpJog.Margin = new System.Windows.Forms.Padding(4);
             this.tlpJog.Name = "tlpJog";
-            this.tlpJog.RowCount = 6;
+            this.tlpJog.RowCount = 7;
             this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 48F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlpJog.Size = new System.Drawing.Size(736, 339);
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlpJog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tlpJog.Size = new System.Drawing.Size(736, 410);
             this.tlpJog.TabIndex = 0;
             // 
             // rbIncremental
