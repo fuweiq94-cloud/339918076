@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: trajectory_new
-title: 轨迹查看工艺模组（XYZ 运动轨迹可视化）
+title: 轨迹查看工艺模组（DOMO WinForms 运动可视化）
 scope:
     - Trajectory/
 source_files: []

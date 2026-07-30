@@ -6,6 +6,7 @@
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
 - [ZBarView.cs](file://Controls/ZBarView.cs)
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
@@ -19,10 +20,11 @@
 
 ## 更新摘要
 **所做更改**
-- 更新了项目结构部分，反映UI控件库现在通过文件链接方式在三个DLL中共享
-- 新增了独立DLL构建说明章节，详细说明文件链接机制
-- 更新了依赖关系分析，体现多DLL架构下的控件共享模式
-- 完善了使用示例与最佳实践，包含跨DLL引用指南
+- 新增了PointInfoView点信息视图控件的完整文档，包括其功能特性、属性配置和事件处理
+- 更新了核心控件章节，添加PointInfoView作为新增的专业视图控件
+- 完善了架构总览图，展示PointInfoView与其他控件的集成关系
+- 扩展了详细组件分析章节，提供PointInfoView的实现细节和使用示例
+- 更新了依赖关系分析，体现PointInfoView在控件库中的位置和作用
 
 ## 目录
 1. [简介](#简介)
@@ -39,17 +41,17 @@
 ## 简介
 本开发文档面向 ProcessModules 的 UI 控件库，重点覆盖以下方面：
 - 基础控件：DroLabel（数字显示）、JogButton（点动按钮）的功能、属性与事件处理
-- 专业视图：XYView（二维视图）、ZBarView（高度指示器）的使用方法
+- 专业视图：XYView（二维视图）、ZBarView（高度指示器）、PointInfoView（点信息视图）的使用方法
 - 自定义绘制与样式定制：主题支持、重绘流程、性能要点
 - 工具类：MathHelper（数学计算）、PaintHelper（绘图辅助）的使用示例
 - 控件组合与复用：容器化、模板化、数据绑定机制
 - 响应式设计与可访问性：缩放、布局适配、键盘与屏幕阅读器支持
 - 跨浏览器兼容性说明：Windows Forms 环境下的兼容策略与注意事项
 
-**更新** 本项目现已采用多DLL架构，UI控件库通过文件链接方式在MainControl、PointJump、Trajectory三个DLL中共享，实现代码复用和模块化部署。
+**更新** 本项目现已采用多DLL架构，UI控件库通过文件链接方式在MainControl、PointJump、Trajectory三个DLL中共享，实现代码复用和模块化部署。新增的PointInfoView控件为点位管理提供了完整的可视化解决方案。
 
 ## 项目结构
-控件库位于 Controls 目录，包含数值显示、交互按钮、二维视图、高度指示器以及绘图与数学工具。业务集成通过 MainControl 模块中的表单与进程模块进行承载，逻辑层由 AxisController、AxisJogService、PlatformMotionService、XyzControllerHub 等提供运动控制能力。
+控件库位于 Controls 目录，包含数值显示、交互按钮、二维视图、高度指示器、点信息视图以及绘图与数学工具。业务集成通过 MainControl 模块中的表单与进程模块进行承载，逻辑层由 AxisController、AxisJogService、PlatformMotionService、XyzControllerHub 等提供运动控制能力。
 
 **更新** 项目现已重构为多DLL架构，UI控件库通过文件链接方式在三个独立的DLL项目中共享：
 
@@ -75,6 +77,7 @@ DL["DroLabel<br/>数字显示"]
 JB["JogButton<br/>点动按钮"]
 XY["XYView<br/>二维视图"]
 ZB["ZBarView<br/>高度指示器"]
+PIV["PointInfoView<br/>点信息视图"]
 MH["MathHelper<br/>数学工具"]
 PH["PaintHelper<br/>绘图辅助"]
 end
@@ -88,18 +91,21 @@ MCC --> DL
 MCC --> JB
 MCC --> XY
 MCC --> ZB
+MCC --> PIV
 MCC --> MH
 MCC --> PH
 PJC --> DL
 PJC --> JB
 PJC --> XY
 PJC --> ZB
+PJC --> PIV
 PJC --> MH
 PJC --> PH
 TRC --> DL
 TRC --> JB
 TRC --> XY
 TRC --> ZB
+TRC --> PIV
 TRC --> MH
 TRC --> PH
 ```
@@ -128,7 +134,7 @@ TRC --> PH
 - [TrajectoryViewProcessModule.cs](file://Trajectory/TrajectoryViewProcessModule.cs)
 
 ## 核心控件
-本节聚焦四个关键控件的职责、常用属性、事件与绘制扩展点。
+本节聚焦五个关键控件的职责、常用属性、事件与绘制扩展点。
 
 - DroLabel（数字显示控件）
   - 职责：以高可读性展示轴位置、速度、状态等数值，支持单位、精度、颜色与对齐方式
@@ -154,20 +160,27 @@ TRC --> PH
   - 事件：阈值触发、越界告警、数值更新
   - 绘制：渐变填充、刻度线、指针与标签
 
+- PointInfoView（点信息视图控件）
+  - 职责：管理和显示点位信息，支持编辑点位名称、实时刷新、点击跳转导航
+  - 关键属性：点位列表、显示模式、编辑权限、刷新频率、主题样式
+  - 事件：点位选择、名称编辑、跳转请求、数据更新
+  - 绘制：列表渲染、编辑框、状态指示、交互反馈
+
 **章节来源**
 - [DroLabel.cs](file://Controls/DroLabel.cs)
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
 - [ZBarView.cs](file://Controls/ZBarView.cs)
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
 
 ## 架构总览
 控件库采用"视图-工具-服务"分层：
-- 视图层：DroLabel、JogButton、XYView、ZBarView 负责 UI 呈现与交互
+- 视图层：DroLabel、JogButton、XYView、ZBarView、PointInfoView 负责 UI 呈现与交互
 - 工具层：MathHelper、PaintHelper 提供通用计算与绘制能力
 - 服务层：AxisController、AxisJogService、PlatformMotionService、XyzControllerHub 提供运动控制与状态同步
 - 界面集成：RunForm、UnifiedRunForm、MainControlProcessModule 将控件与业务逻辑装配
 
-**更新** 架构现已支持多DLL部署，控件库通过文件链接在多个DLL中共享，保持代码一致性的同时实现模块化。
+**更新** 架构现已支持多DLL部署，控件库通过文件链接在多个DLL中共享，保持代码一致性的同时实现模块化。新增的PointInfoView控件增强了点位管理能力。
 
 ```mermaid
 classDiagram
@@ -191,6 +204,11 @@ class ZBarView {
 +事件 : 阈值触发, 数值更新
 +方法 : 设置范围(), 更新值()
 }
+class PointInfoView {
++属性 : 点位列表, 显示模式, 编辑权限, 刷新频率
++事件 : 点位选择, 名称编辑, 跳转请求
++方法 : 添加点位(), 删除点位(), 跳转到点位()
+}
 class MathHelper {
 +方法 : 四舍五入(), 限制范围(), 插值()
 }
@@ -213,12 +231,15 @@ DroLabel --> PaintHelper : "使用"
 JogButton --> PaintHelper : "使用"
 XYView --> PaintHelper : "使用"
 ZBarView --> PaintHelper : "使用"
+PointInfoView --> PaintHelper : "使用"
 XYView --> MathHelper : "使用"
 ZBarView --> MathHelper : "使用"
+PointInfoView --> MathHelper : "使用"
 JogButton --> AxisJogService : "调用"
 AxisController --> AxisJogService : "委托"
 AxisJogService --> PlatformMotionService : "下发"
 AxisController --> XyzControllerHub : "协调"
+PointInfoView --> AxisController : "跳转控制"
 ```
 
 **图表来源**
@@ -226,6 +247,7 @@ AxisController --> XyzControllerHub : "协调"
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
 - [ZBarView.cs](file://Controls/ZBarView.cs)
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
@@ -384,6 +406,52 @@ Animate --> End["完成绘制"]
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 
+### PointInfoView 点信息视图控件
+- 功能要点
+  - 点位管理：支持点位的增删改查操作，提供完整的点位生命周期管理
+  - 名称编辑：内联编辑功能，支持双击编辑点位名称，实时保存修改
+  - 实时刷新：自动刷新机制，确保显示数据与后端状态同步
+  - 点击跳转：点击点位项直接跳转到对应坐标位置，提升操作效率
+- 属性与方法
+  - 点位列表、显示模式、编辑权限、刷新频率、主题样式
+  - 添加点位、删除点位、跳转到点位、刷新显示
+- 事件
+  - 点位选择、名称编辑、跳转请求、数据更新
+  - 编辑完成、删除确认、批量操作回调
+- 自定义绘制
+  - 列表渲染优化，虚拟滚动支持大数据集
+  - 编辑框绘制，支持输入验证和错误提示
+  - 状态指示器，显示点位连接状态和可用性
+
+```mermaid
+flowchart TD
+Init["初始化控件"] --> LoadPoints["加载点位列表"]
+LoadPoints --> RenderList["渲染点位列表"]
+RenderList --> WaitEvent{"等待用户事件"}
+WaitEvent --> |点击点位| SelectPoint["选定点位"]
+WaitEvent --> |双击编辑| StartEdit["开始编辑名称"]
+WaitEvent --> |删除操作| DeletePoint["删除点位"]
+SelectPoint --> JumpToPosition["跳转到指定位置"]
+StartEdit --> EditName["编辑点位名称"]
+EditName --> ValidateInput["验证输入内容"]
+ValidateInput --> SaveChanges["保存修改"]
+SaveChanges --> RefreshDisplay["刷新显示"]
+DeletePoint --> ConfirmDelete["确认删除"]
+ConfirmDelete --> RemoveFromList["从列表移除"]
+RemoveFromList --> RefreshDisplay
+RefreshDisplay --> WaitEvent
+```
+
+**图表来源**
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [AxisController.cs](file://Logic/AxisController.cs)
+
+**章节来源**
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
+- [PaintHelper.cs](file://Controls/PaintHelper.cs)
+- [AxisController.cs](file://Logic/AxisController.cs)
+
 ### 工具类：MathHelper 与 PaintHelper
 - MathHelper
   - 四舍五入、限制范围、插值、角度转换、单位换算
@@ -398,12 +466,13 @@ Animate --> End["完成绘制"]
 
 ## 依赖关系分析
 控件与工具、服务的依赖关系如下：
-- DroLabel、JogButton、XYView、ZBarView 依赖 PaintHelper 进行绘制
-- XYView、ZBarView 依赖 MathHelper 进行数值计算
+- DroLabel、JogButton、XYView、ZBarView、PointInfoView 依赖 PaintHelper 进行绘制
+- XYView、ZBarView、PointInfoView 依赖 MathHelper 进行数值计算
 - JogButton 依赖 AxisJogService 进行点动控制
+- PointInfoView 依赖 AxisController 进行点位跳转操作
 - AxisController 协调 AxisJogService、PlatformMotionService、XyzControllerHub
 
-**更新** 依赖关系现已支持多DLL架构，控件库通过文件链接在MainControl、PointJump、Trajectory三个DLL中共享。
+**更新** 依赖关系现已支持多DLL架构，控件库通过文件链接在MainControl、PointJump、Trajectory三个DLL中共享。PointInfoView的加入增强了点位管理的依赖关系。
 
 ```mermaid
 graph LR
@@ -411,10 +480,13 @@ DL["DroLabel"] --> PH["PaintHelper"]
 JB["JogButton"] --> PH
 XY["XYView"] --> PH
 ZB["ZBarView"] --> PH
+PIV["PointInfoView"] --> PH
 XY --> MH["MathHelper"]
 ZB --> MH
+PIV --> MH
 JB --> AJS["AxisJogService"]
-AC["AxisController"] --> AJS
+PIV --> AC["AxisController"]
+AC --> AJS
 AJS --> PMS["PlatformMotionService"]
 AC --> XH["XyzControllerHub"]
 MC["MainControl.dll"] --> DL
@@ -429,6 +501,9 @@ TR --> XY
 MC --> ZB
 PJ --> ZB
 TR --> ZB
+MC --> PIV
+PJ --> PIV
+TR --> PIV
 ```
 
 **图表来源**
@@ -436,6 +511,7 @@ TR --> ZB
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
 - [ZBarView.cs](file://Controls/ZBarView.cs)
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
 - [MathHelper.cs](file://Controls/MathHelper.cs)
 - [PaintHelper.cs](file://Controls/PaintHelper.cs)
 - [AxisController.cs](file://Logic/AxisController.cs)
@@ -450,7 +526,7 @@ TR --> ZB
 
 ## 性能与绘制优化
 - 双缓冲与增量绘制
-  - 在 XYView、ZBarView 中启用双缓冲，减少闪烁
+  - 在 XYView、ZBarView、PointInfoView 中启用双缓冲，减少闪烁
   - 仅重绘变化区域，利用裁剪区域提升性能
 - 文本与图形缓存
   - 对静态网格、图标进行路径缓存
@@ -458,6 +534,7 @@ TR --> ZB
 - 刷新策略
   - DroLabel 使用防抖更新，降低高频刷新开销
   - XYView 使用帧率控制，平衡流畅性与资源占用
+  - PointInfoView 使用增量更新，只刷新变化的点位信息
 - 主题与样式
   - 统一主题配置，避免重复创建画笔与画刷
   - 颜色与字体资源集中管理，便于切换与复用
@@ -467,6 +544,7 @@ TR --> ZB
 - 避免频繁的跨DLL边界调用
 - 利用静态缓存减少重复计算
 - 考虑异步更新和批处理操作
+- PointInfoView特别需要注意大数据集的虚拟化渲染
 
 [本节为通用指导，不直接分析具体文件]
 
@@ -483,6 +561,10 @@ TR --> ZB
 - 高度指示不准确
   - 检查 ZBarView 的范围与刻度设置
   - 验证阈值与报警逻辑
+- 点信息视图问题
+  - 检查 PointInfoView 的点位数据源连接
+  - 验证编辑权限和刷新频率设置
+  - 确认点击跳转功能的坐标映射
 - 多DLL相关问题
   - 确认控件文件链接正确配置
   - 检查各DLL版本一致性
@@ -493,13 +575,14 @@ TR --> ZB
 - [JogButton.cs](file://Controls/JogButton.cs)
 - [XYView.cs](file://Controls/XYView.cs)
 - [ZBarView.cs](file://Controls/ZBarView.cs)
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)
 - [AxisJogService.cs](file://Logic/AxisJogService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 
 ## 结论
 ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实现了数值显示、交互控制与专业视图的统一。通过 PaintHelper 与 MathHelper 的抽象，控件具备高可定制性与良好性能。结合业务逻辑层的运动控制服务，形成完整的"视图-工具-服务"架构，满足工业控制场景的高可靠性与高可用性需求。
 
-**更新** 多DLL架构的引入进一步提升了项目的可维护性和可扩展性，通过文件链接方式共享控件库，既保证了代码的一致性，又实现了模块化的部署和管理。
+**更新** 多DLL架构的引入进一步提升了项目的可维护性和可扩展性，通过文件链接方式共享控件库，既保证了代码的一致性，又实现了模块化的部署和管理。新增的PointInfoView控件为点位管理提供了完整的可视化解决方案，增强了系统的易用性和功能性。
 
 [本节为总结，不直接分析具体文件]
 
@@ -508,15 +591,19 @@ ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实�
 - 控件组合与复用
   - 将 DroLabel 与 ZBarView 组合为"高度监控面板"，统一主题与刷新策略
   - 使用容器控件封装 JogButton 组，提供方向键与快捷键映射
+  - 将 PointInfoView 与 XYView 组合为"点位导航面板"，实现可视化点位管理
 - 数据绑定机制
   - 通过属性绑定将 AxisController 的位置数据绑定到 DroLabel
   - 使用事件驱动更新 XYView 的轨迹数据，避免轮询
+  - 将点位数据源绑定到 PointInfoView，实现双向数据同步
 - 响应式设计
   - 根据 DPI 与窗口大小动态调整网格间距与字体大小
   - 使用相对布局与锚定策略，确保不同分辨率下的显示一致性
+  - PointInfoView支持动态列宽调整和滚动条优化
 - 可访问性
   - 为 JogButton 添加键盘导航与屏幕阅读器描述
   - 提供高对比度主题与无障碍颜色方案
+  - PointInfoView支持键盘操作和焦点管理
 - 跨浏览器兼容性
   - Windows Forms 环境下，注意 GDI+ 与高分屏的兼容性
   - 避免使用非标准 API，确保在不同系统版本下的稳定性
@@ -535,6 +622,7 @@ ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实�
   - 减少跨DLL边界的频繁调用
   - 使用事件总线模式进行模块间通信
   - 合理设计接口，避免不必要的序列化开销
+  - PointInfoView在处理大量点位数据时建议使用虚拟化技术
 
 **章节来源**
 - [MainControlProcessModule.cs](file://MainControl/MainControlProcessModule.cs)
@@ -544,3 +632,4 @@ ProcessModules 的 UI 控件库以清晰的职责划分与工具化支撑，实�
 - [AxisJogService.cs](file://Logic/AxisJogService.cs)
 - [PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
+- [PointInfoView.cs](file://Controls/PointInfoView.cs)

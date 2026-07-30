@@ -3,11 +3,11 @@ schema_version: 1
 locale: zh-CN
 branch: main
 nodes_managed: true
-exported_at: "2026-07-30T17:42:01Z"
+exported_at: "2026-07-30T18:22:49Z"
 modules:
     "":
-        dir_name: ProcessModules 工艺模组集合（CNC WinForms 插件库）
-        title: ProcessModules 工艺模组集合（CNC WinForms 插件库）
+        dir_name: ProcessModules 工艺模组聚合工程
+        title: ProcessModules 工艺模组聚合工程
         scope:
             - ProcessModules.sln
             - ProcessModules.csproj
@@ -68,8 +68,8 @@ modules:
             - path: pointjump
             - path: trajectory_new
     maincontrol:
-        dir_name: 主控制工艺模组（XYZ_U 三轴手动控制）
-        title: 主控制工艺模组（XYZ/U 三轴手动控制）
+        dir_name: DOMO 主控制工艺模组（XYZ_U 三轴手动控制）
+        title: DOMO 主控制工艺模组（XYZ/U 三轴手动控制）
         scope:
             - MainControl/
         source_files: []
@@ -94,8 +94,8 @@ modules:
         related_to:
             - path: pointjump/core_module
     maincontrol/forms:
-        dir_name: 主控制运行界面与轴限位设置表单
-        title: 主控制运行界面与轴限位设置表单
+        dir_name: 主控制运行界面（RunForm _ UnifiedRunForm _ AxisLimitForm）
+        title: 主控制运行界面（RunForm / UnifiedRunForm / AxisLimitForm）
         scope:
             - MainControl/AxisLimitForm.cs
             - MainControl/RunForm.cs
@@ -118,8 +118,8 @@ modules:
         related_to:
             - path: logic
     pointjump/core_module:
-        dir_name: 点位跳转工艺模组（PointJump）
-        title: 点位跳转工艺模组（PointJump）
+        dir_name: 点位跳转工艺模块（PointJump）
+        title: 点位跳转工艺模块（PointJump）
         scope:
             - PointJump/PointJumpProcessModule.cs
             - PointJump/PointJumpGlobalSetting.cs
@@ -133,8 +133,8 @@ modules:
             - path: domo
             - path: maincontrol/core
     trajectory_new:
-        dir_name: 轨迹查看工艺模组（XYZ 运动轨迹可视化）
-        title: 轨迹查看工艺模组（XYZ 运动轨迹可视化）
+        dir_name: 轨迹查看工艺模组（DOMO WinForms 运动可视化）
+        title: 轨迹查看工艺模组（DOMO WinForms 运动可视化）
         scope:
             - Trajectory/
         source_files: []

@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: pointjump/core_module
-title: 点位跳转工艺模组（PointJump）
+title: 点位跳转工艺模块（PointJump）
 scope:
     - PointJump/PointJumpProcessModule.cs
     - PointJump/PointJumpGlobalSetting.cs

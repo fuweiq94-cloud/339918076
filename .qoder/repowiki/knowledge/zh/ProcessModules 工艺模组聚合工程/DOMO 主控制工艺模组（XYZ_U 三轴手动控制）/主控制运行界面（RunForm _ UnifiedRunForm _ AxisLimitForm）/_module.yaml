@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: maincontrol/forms
-title: 主控制运行界面与轴限位设置表单
+title: 主控制运行界面（RunForm / UnifiedRunForm / AxisLimitForm）
 scope:
     - MainControl/AxisLimitForm.cs
     - MainControl/RunForm.cs

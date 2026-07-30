@@ -15,22 +15,21 @@
 - [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [Logic/AxisController.cs](file://Logic/AxisController.cs)
 - [Logic/XyzControllerHub.cs](file://Logic/XyzControllerHub.cs)
-- [PointJump/README.md](file://PointJump/README.md)
 - [PointJump/Controls/DroLabel.cs](file://PointJump/Controls/DroLabel.cs)
 - [PointJump/Controls/JogButton.cs](file://PointJump/Controls/JogButton.cs)
 - [PointJump/Controls/MathHelper.cs](file://PointJump/Controls/MathHelper.cs)
 - [PointJump/Controls/PaintHelper.cs](file://PointJump/Controls/PaintHelper.cs)
 - [PointJump/Controls/XYView.cs](file://PointJump/Controls/XYView.cs)
 - [PointJump/Controls/ZBarView.cs](file://PointJump/Controls/ZBarView.cs)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 </cite>
 
 ## 更新摘要
 **变更内容**   
-- 更新了项目结构说明，反映PointJump模块现已完全独立，拥有自己的Logic目录实现点跳功能
-- 增强了独立DLL架构的详细说明，包含完整的Logic目录结构和UI控件集
-- 更新了依赖关系分析以体现模块化设计和独立部署能力
-- 增加了独立部署和集成的指导说明
-- 补充了Logic目录下核心类的功能说明，包括AxisController.cs、PlatformMotionService.cs等
+- 移除了冗余的文档文件（架构设计.md、概述.md），简化了项目结构
+- 在RunForm.Designer.cs中集成了PointInfoView控件，增强了点位管理功能
+- 优化了界面布局，提供了更直观的点位信息显示和操作体验
+- 保持了PointJump模块的独立性和完整性
 
 ## 目录
 1. [简介](#简介)
@@ -92,6 +91,7 @@ subgraph "MainControl"
 MC_GLOBAL["MainControlGlobalSetting.cs"]
 MC_PROJECT["MainControlProjectSetting.cs"]
 MC_RF["RunForm.cs"]
+MC_PIV["PointInfoView.cs"]
 end
 RootPP["PresetPoint.cs"]
 PJPROJ --> PJPM
@@ -118,6 +118,7 @@ PJPM --> PMA
 MC_RF --> PMS
 MC_RF --> AC
 MC_RF --> XHUB
+MC_RF --> MC_PIV
 ```
 
 **图表来源**
@@ -145,17 +146,17 @@ MC_RF --> XHUB
 - [MainControl/MainControlGlobalSetting.cs](file://MainControl/MainControlGlobalSetting.cs)
 - [MainControl/MainControlProjectSetting.cs](file://MainControl/MainControlProjectSetting.cs)
 - [MainControl/RunForm.cs](file://MainControl/RunForm.cs)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 - [PresetPoint.cs](file://PresetPoint.cs)
 
 章节来源
-- [PointJump/README.md](file://PointJump/README.md)
 - [PointJump/PointJump.csproj](file://PointJump/PointJump.csproj)
 
 ## 核心组件
 - **点位数据模型**：PresetPoint定义点位的标识、名称、坐标、单位、可选属性等，用于跨模块共享与持久化。
 - **进程模块**：PointJumpProcessModule负责加载/保存项目设置、管理点位集合、暴露API供UI或外部调用。
 - **设置类**：PointJumpGlobalSetting、PointJumpProjectSetting分别承载全局与项目级配置（如默认单位、坐标系、速度限制、安全参数等）。
-- **界面**：RunForm提供点位的可视化列表、选择、编辑与执行入口。
+- **界面**：RunForm提供点位的可视化列表、选择、编辑与执行入口，现已集成PointInfoView增强显示功能。
 - **自定义控件**：Controls目录包含DroLabel、JogButton、XYView、ZBarView等专用控件，提供数值显示、手动操作、二维视图等功能。
 - **运动服务**：Logic目录包含完整的运动控制实现，包括PlatformMotionService、AxisController、XyzControllerHub等核心类，封装底层硬件接口，提供绝对定位、速度/加速度、插补与状态同步能力。
 
@@ -175,20 +176,23 @@ MC_RF --> XHUB
 
 ## 架构总览
 PointJump采用"UI-业务-运动服务"的分层架构，现已完全独立为PointJump.dll模块，拥有自己的Logic目录实现完整的运动控制功能：
-- **UI层（RunForm）**：展示点位列表、接收用户操作（新增/编辑/删除/执行），并调用ProcessModule提供的API。
+- **UI层（RunForm）**：展示点位列表、接收用户操作（新增/编辑/删除/执行），并调用ProcessModule提供的API。现已集成PointInfoView提供更丰富的点位信息显示。
 - **业务层（PointJumpProcessModule）**：维护点位集合与项目设置，校验输入，协调运动服务完成跳转。
 - **运动服务层（Logic目录）**：包含PlatformMotionService、AxisController、XyzControllerHub等核心类，屏蔽硬件差异，统一坐标与速度语义，返回执行结果与状态。
 
 ```mermaid
 sequenceDiagram
 participant UI as "RunForm(界面)"
+participant PIV as "PointInfoView(点位信息)"
 participant PM as "PointJumpProcessModule"
 participant PP as "PresetPoint(数据模型)"
 participant PMS as "PlatformMotionService"
 participant AC as "AxisController"
 participant XHUB as "XyzControllerHub"
+UI->>PIV : "显示点位详细信息"
 UI->>PM : "获取点位列表/添加/编辑/删除"
 PM-->>UI : "返回点位集合/操作结果"
+UI->>PIV : "更新点位信息显示"
 UI->>PM : "执行点位跳转(目标点, 速度, 模式)"
 PM->>PP : "校验目标点有效性"
 PM->>PMS : "请求绝对定位/多轴联动"
@@ -196,11 +200,13 @@ PMS->>AC : "下发轴命令(速度/位置)"
 AC-->>PMS : "状态反馈/完成事件"
 PMS-->>PM : "执行结果"
 PM-->>UI : "更新状态/提示"
+UI->>PIV : "刷新点位状态显示"
 ```
 
 **图表来源**
 - [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
 - [PointJump/PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 - [PresetPoint.cs](file://PresetPoint.cs)
 - [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
 - [Logic/AxisController.cs](file://Logic/AxisController.cs)
@@ -257,19 +263,22 @@ class PresetPoint {
 **章节来源**
 - [PointJump/PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
 
-### 运行界面 RunForm
+### 运行界面 RunForm 与 PointInfoView 集成
 - **功能**
   - 点位列表展示、搜索与筛选
   - 新建/编辑/删除点位表单
   - 选择点位后点击"跳转"，可覆盖速度与模式
   - 实时显示执行状态与错误信息
+  - **新增**：PointInfoView集成，提供更详细的点位信息显示和预览功能
 - **交互流程**
   - 用户编辑点位 -> 保存至内存集合 -> 写入项目设置
   - 用户选择点位 -> 调用ProcessModule执行 -> 订阅运动服务事件 -> 刷新UI
+  - **新增**：PointInfoView实时更新显示当前选中点位的详细信息
 
 **章节来源**
 - [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
 - [PointJump/RunForm.resx](file://PointJump/RunForm.resx)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 
 ### Logic目录核心类详解
 **更新** PointJump模块现在拥有独立的Logic目录，实现了完整的运动控制功能：
@@ -313,6 +322,23 @@ class PresetPoint {
 - [PointJump/Controls/XYView.cs](file://PointJump/Controls/XYView.cs)
 - [PointJump/Controls/ZBarView.cs](file://PointJump/Controls/ZBarView.cs)
 
+### PointInfoView 点位信息显示控件
+**新增** PointInfoView控件为RunForm提供了强大的点位信息显示功能：
+
+- **功能特性**
+  - 实时显示当前选中点位的详细信息
+  - 支持坐标预览和状态指示
+  - 提供点位信息的快速编辑入口
+  - 与RunForm无缝集成，自动响应点位选择变化
+- **集成方式**
+  - 在RunForm.Designer.cs中声明和初始化
+  - 通过事件机制与点位选择同步
+  - 支持数据绑定和实时更新
+
+**章节来源**
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
+- [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
+
 ### 全局设置与项目设置
 - **全局设置（PointJumpGlobalSetting / MainControlGlobalSetting）**
   - 默认单位、坐标系原点、默认速度/加速度、安全限位、日志级别
@@ -344,6 +370,7 @@ class PresetPoint {
   - PointJumpProcessModule依赖PresetPoint、PointJumpProjectSetting、PointJumpGlobalSetting
   - PointJumpProcessModule依赖Logic目录下的PlatformMotionService、AxisController、XyzControllerHub等核心类
   - RunForm依赖Controls目录下的自定义控件
+  - **新增**：RunForm依赖PointInfoView控件以增强信息显示功能
 - **跨模块依赖**
   - MainControl.RunForm同样依赖Logic层运动服务，用于通用运行流程
 - **潜在循环依赖**
@@ -352,6 +379,7 @@ class PresetPoint {
 ```mermaid
 graph LR
 RF["RunForm"] --> PM["PointJumpProcessModule"]
+RF --> PIV["PointInfoView"]
 PM --> PP["PresetPoint"]
 PM --> PGS["PointJumpGlobalSetting"]
 PM --> PPS["PointJumpProjectSetting"]
@@ -371,6 +399,7 @@ RF --> ZBAR["ZBarView"]
 MCRF["MainControl.RunForm"] --> PMS
 MCRF --> AC
 MCRF --> XHUB
+MCRF --> PIV
 PJPROJ["PointJump.dll"] --> RF
 PJPROJ --> PM
 PJPROJ --> PMS
@@ -379,6 +408,7 @@ PJPROJ --> PMS
 **图表来源**
 - [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
 - [PointJump/PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 - [PresetPoint.cs](file://PresetPoint.cs)
 - [PointJump/PointJumpGlobalSetting.cs](file://PointJump/PointJumpGlobalSetting.cs)
 - [PointJump/PointJumpProjectSetting.cs](file://PointJump/PointJumpProjectSetting.cs)
@@ -417,6 +447,7 @@ PJPROJ --> PMS
 - **控件性能优化**
   - 自定义控件采用双缓冲技术减少闪烁
   - 大量数据更新时使用虚拟化技术
+  - **新增**：PointInfoView采用延迟加载和缓存机制，提升大数据量显示性能
 
 ## 故障排查指南
 - **常见错误**
@@ -425,24 +456,28 @@ PJPROJ --> PMS
   - 界面无响应：确认事件订阅与线程切换是否正确
   - 控件显示异常：检查数据绑定和更新机制
   - Logic层错误：检查运动服务初始化、硬件连接状态
+  - **新增**：PointInfoView显示问题：检查数据源绑定和更新事件
 - **调试技巧**
   - 开启详细日志，记录命令下发与回调
   - 使用只读模式验证点位与路径，再切换到执行模式
   - 逐步缩小问题范围：先单轴测试，再多轴联动
   - 监控控件状态和数据流
   - 使用Logic目录中的诊断工具检查运动状态
+  - **新增**：检查PointInfoView的事件订阅和数据绑定
 - **恢复策略**
   - 回退到上一个稳定项目设置
   - 重置轴状态与报警，重新回零
   - 重建控件实例和事件订阅
   - 重启Logic层的运动服务
+  - **新增**：重新初始化PointInfoView控件实例
 
 **章节来源**
 - [PointJump/PointJumpProcessModule.cs](file://PointJump/PointJumpProcessModule.cs)
 - [Logic/PlatformMotionService.cs](file://Logic/PlatformMotionService.cs)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 
 ## 结论
-PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现了点位的可视化管理与可靠跳转。现已重构为完全独立的PointJump.dll，拥有自己的Logic目录实现点跳功能，包括AxisController.cs、PlatformMotionService.cs等核心类，以及完整的UI控件集。这种自包含的设计既满足日常快速定位需求，也支持复杂场景下的批量与程序化控制。建议在生产环境中结合日志与监控，持续优化速度与路径参数，确保稳定性与效率。
+PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现了点位的可视化管理与可靠跳转。现已重构为完全独立的PointJump.dll，拥有自己的Logic目录实现点跳功能，包括AxisController.cs、PlatformMotionService.cs等核心类，以及完整的UI控件集。通过移除冗余文档文件和集成PointInfoView控件，模块的结构更加简洁，用户体验得到显著提升。这种自包含的设计既满足日常快速定位需求，也支持复杂场景下的批量与程序化控制。建议在生产环境中结合日志与监控，持续优化速度与路径参数，确保稳定性与效率。
 
 ## 附录
 
@@ -487,11 +522,13 @@ PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现�
 - **MainControl.RunForm**作为通用运行界面，复用Logic层运动服务
 - **PointJump的RunForm**专注点位管理，两者可通过共享设置与事件互通
 - **独立DLL部署**：PointJump.dll可单独部署，通过引用方式使用
+- **新增**：PointInfoView控件可在两个模块间共享使用，提供一致的点位信息显示体验
 
 **章节来源**
 - [MainControl/RunForm.cs](file://MainControl/RunForm.cs)
 - [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
 - [PointJump/PointJump.csproj](file://PointJump/PointJump.csproj)
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
 
 ### 独立DLL部署与集成
 - **构建输出**：PointJump.dll包含所有必要的界面、逻辑和资源
@@ -503,7 +540,6 @@ PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现�
 
 **章节来源**
 - [PointJump/PointJump.csproj](file://PointJump/PointJump.csproj)
-- [PointJump/README.md](file://PointJump/README.md)
 
 ### Controls控件使用指南
 - **DroLabel**：继承自Label，支持数值格式化、实时更新、颜色指示
@@ -542,3 +578,25 @@ PointJump模块以清晰的层次结构与稳定的运动服务抽象，实现�
 - [Logic/JogMode.cs](file://Logic/JogMode.cs)
 - [Logic/AxisJogService.cs](file://Logic/AxisJogService.cs)
 - [Logic/PlatformMotionAdapter.cs](file://Logic/PlatformMotionAdapter.cs)
+
+### PointInfoView控件使用指南
+**新增** PointInfoView控件为点位信息显示提供了强大的功能：
+
+- **主要功能**
+  - 实时显示当前选中点位的详细信息
+  - 支持坐标预览和状态指示
+  - 提供点位信息的快速编辑入口
+  - 与RunForm无缝集成，自动响应点位选择变化
+- **使用方法**
+  - 在窗体设计中拖拽PointInfoView控件
+  - 通过DataBinding属性绑定PresetPoint对象
+  - 订阅SelectedPointChanged事件处理点位选择变化
+  - 支持自定义显示格式和样式
+- **集成示例**
+  - 在RunForm.Designer.cs中声明控件实例
+  - 在构造函数中初始化数据绑定
+  - 在点位选择事件中更新控件显示
+
+**章节来源**
+- [MainControl/Controls/PointInfoView.cs](file://MainControl/Controls/PointInfoView.cs)
+- [PointJump/RunForm.Designer.cs](file://PointJump/RunForm.Designer.cs)
