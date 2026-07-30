@@ -25,6 +25,7 @@ namespace MainControlProcessModule
     {
         internal RunForm runForm;
         internal UnifiedRunForm unifiedRunForm;
+        internal URotationForm unirotationForm;  // U 轴旋转控制表单
         public ModuleSettingForm settingForm;
 
         public MainControlGlobalSetting globalSetting;
@@ -67,12 +68,13 @@ namespace MainControlProcessModule
                     globalSetting.UMin, globalSetting.UMax);
                 _hub.SpeedSetting = globalSetting.SpeedSetting;
 
-                // JOG 服务：每个轴一个
+                // JOG 服务：每个轴一个（XYZU 四轴）
                 _jogServices = new AxisJogService[]
                 {
                     new AxisJogService(_hub.X),
                     new AxisJogService(_hub.Y),
-                    new AxisJogService(_hub.Z)
+                    new AxisJogService(_hub.Z),
+                    new AxisJogService(_hub.U)
                 };
                 ApplyJogSetting();
 
@@ -241,6 +243,18 @@ namespace MainControlProcessModule
             return true;
         }
 
+        /// <summary>显示 U 轴旋转控制面板（独立窗口）。</summary>
+        public bool ShowURotationControl(Panel panel)
+        {
+            // U 轴表单作为独立窗口，不在 Panel 中显示
+            if (unirotationForm == null || unirotationForm.IsDisposed)
+                unirotationForm = new URotationForm(this);
+
+            unirotationForm.StartPosition = FormStartPosition.CenterParent;
+            unirotationForm.Show();
+            return true;
+        }
+
         /// <summary>执行工艺模组相关动作。</summary>
         public override int Action(params object[] param)
         {
@@ -339,6 +353,7 @@ namespace MainControlProcessModule
                 case "X": index = 0; break;
                 case "Y": index = 1; break;
                 case "Z": index = 2; break;
+                case "U": index = 3; break;  // U 轴支持
                 default:
                     InsertAlarm("未知轴名:" + axisName);
                     return -2;
@@ -380,12 +395,16 @@ namespace MainControlProcessModule
             switch (key)
             {
                 case "SpeedSetting": return _hub.SpeedSetting;
+                // X/Y/Z/U四轴当前位置
                 case "CurrentX": return _hub.X.Current;
                 case "CurrentY": return _hub.Y.Current;
                 case "CurrentZ": return _hub.Z.Current;
+                case "CurrentU": return _hub.U.Current;  // U 轴当前位置
+                // X/Y/Z/U四轴目标位置
                 case "TargetX": return _hub.X.Target;
                 case "TargetY": return _hub.Y.Target;
                 case "TargetZ": return _hub.Z.Target;
+                case "TargetU": return _hub.U.Target;    // U 轴目标位置
                 default: return GetStringVariable(key);
             }
         }
