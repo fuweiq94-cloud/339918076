@@ -1,3 +1,5 @@
+using ProcessModules;
+
 namespace MainControlProcessModule
 {
     /// <summary>
@@ -82,6 +84,7 @@ namespace MainControlProcessModule
         private JogButton jogUMinus;  // U 轴负向
         private JogButton jogUPlus;   // U 轴正向
         private System.Windows.Forms.Button btnEStop;
+        private System.Windows.Forms.Label lblAxisHeaderU;  // U 轴标签
 
         // —— 状态栏 ——
         private System.Windows.Forms.StatusStrip statusStrip;
@@ -145,7 +148,7 @@ namespace MainControlProcessModule
             this.lblAxisHdrZ = new System.Windows.Forms.Label();
             this.jogZMinus = new JogButton();
             this.jogZPlus = new JogButton();
-            this.lblAxisHeaderU = new Label();  // U 轴标签
+            this.lblAxisHeaderU = new System.Windows.Forms.Label();  // U 轴标签
             this.jogUMinus = new JogButton();   // U 轴负向 JOG
             this.jogUPlus = new JogButton();    // U 轴正向 JOG
             this.grpZ = new System.Windows.Forms.GroupBox();

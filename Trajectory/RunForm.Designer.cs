@@ -1,3 +1,5 @@
+using ProcessModules;
+
 namespace TrajectoryViewProcessModule
 {
     /// <summary>

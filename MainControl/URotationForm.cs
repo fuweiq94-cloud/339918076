@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using ProcessModules;
 
 namespace MainControlProcessModule
 {
@@ -15,13 +17,20 @@ namespace MainControlProcessModule
         // —— UI 引用 ——
         private Panel pnlCircle;          // 圆形表盘
         private Label lblAngleValue;      // 当前角度数值
-        private NumericUpDown nudTarget;  // 目标角度输入
+        private NumericUpDown nud_target;  // 目标角度输入
         private Button btnSetTarget;      // 设置目标按钮
         private Button btnHome;           // 回零按钮
-        private Label lblStatus;          // 状态显示
+        private Label lbl_status;         // 状态显示
 
         // —— JOG 服务 ——
         private AxisJogService _jogService;
+        
+        // —— UI 按钮 ——
+        private JogButton jogButtonPlus;
+        private JogButton jogButtonMinus;
+
+        // —— 动画定时器 ——
+        private Timer animTimer = new Timer();
 
         public URotationForm(MainControlProcessModule module)
         {
@@ -63,16 +72,16 @@ namespace MainControlProcessModule
             // 限制角度范围在 [UMin, UMax]
             try
             {
-                double degMin = _hub.U.Min * 180.0 / Math.PI;
-                double degMax = _hub.U.Max * 180.0 / Math.PI;
-                nud_target.Minimum = (decimal)degMin;
-                nud_target.Maximum = (decimal)degMax;
+                decimal degMin = (decimal)((double)_hub.U.Min * 180.0 / Math.PI);
+                decimal degMax = (decimal)((double)_hub.U.Max * 180.0 / Math.PI);
+                nud_target.Minimum = degMin;
+                nud_target.Maximum = degMax;
             }
             catch { }
 
             // 更新目标框显示
-            double targetDeg = _hub.U.Target * 180.0 / Math.PI;
-            nud_target.Value = (decimal)targetDeg;
+            decimal targetDeg = (decimal)(_hub.U.Target * 180.0 / Math.PI);
+            nud_target.Value = targetDeg;
         }
 
         /// <summary>动画定时器 - 周期性刷新 UI</summary>
@@ -143,20 +152,20 @@ namespace MainControlProcessModule
             try
             {
                 // 从角度转换为弧度
-                double deg = (double)nud_target.Value;
-                double rad = deg * Math.PI / 180.0;
+                decimal deg = nud_target.Value;
+                double rad = (double)deg * Math.PI / 180.0;
                 
                 // 检查是否在范围内
                 if (rad >= _hub.U.Min && rad <= _hub.U.Max)
                 {
                     _hub.U.SetTarget((float)rad);
                     lbl_status.Text = string.Format("已设置目标角度：{0:F2}° → 当前角度：{1:F2}°", 
-                        deg, _hub.U.Current * 180.0 / Math.PI);
+                        (double)deg, _hub.U.Current * 180.0 / Math.PI);
                 }
                 else
                 {
                     MessageBox.Show(string.Format("目标角度超出范围！\n范围：{0:F2}° ~ {1:F2}°",
-                        _hub.U.Min * 180.0 / Math.PI, _hub.U.Max * 180.0 / Math.PI),
+                        (double)_hub.U.Min * 180.0 / Math.PI, (double)_hub.U.Max * 180.0 / Math.PI),
                         "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -235,8 +244,8 @@ namespace MainControlProcessModule
             nud_target.Location = new Point(100, 18);
             nud_target.Size = new Size(120, 23);
             nud_target.DecimalPlaces = 2;
-            nud_target.Increment = new decimal(new long[] { 1, 0, 0, 0 });
-            nud_target.KeyPress += (sender, e) => { if (e.KeyCode == Keys.Enter) SetTargetAngle(); };
+            nud_target.Increment = new decimal(1);
+            nud_target.KeyDown += (sender, e) => { if (e.KeyCode == Keys.Enter) SetTargetAngle(); };
             
             // 
             // btn_set_target
@@ -267,18 +276,23 @@ namespace MainControlProcessModule
             lbl_status.Font = new Font("微软雅黑", 9F);
             
             // 
-            // trb_speed
+            // trb_jogstep
             // 
             TrackBar trb_jogstep = new TrackBar();
+            Label lblSpeed = new Label();
             trb_jogstep.Location = new Point(250, 30);
             trb_jogstep.Size = new Size(200, 45);
             trb_jogstep.Orientation = Orientation.Vertical;
             trb_jogstep.Minimum = 1;
             trb_jogstep.Maximum = 10;
             trb_jogstep.Value = 3;
-            trb_jogstep.TextAlign = ContentAlignment.TopCenter;
-            trb_jogstep.Text = "JOG\n步长\n调节";
-            trb_jogstep.Scroll += (sender, args) => { _jogService.SetStepDistance(trb_jogstep.Value / 10f); };
+            lblSpeed.Text = "JOG\n步长\n调节";
+            lblSpeed.Location = new Point(260, 80);
+            lblSpeed.AutoSize = true;
+            trb_jogstep.Scroll += (sender, args) => { _jogService.SetStepDistance((float)trb_jogstep.Value / 10f); };
+            
+            this.Controls.Add(trb_jogstep);
+            this.Controls.Add(lblSpeed);
             
             // 
             // Jog Buttons
@@ -311,7 +325,6 @@ namespace MainControlProcessModule
             this.Controls.Add(jogButtonMinus);
             
             // 启动动画定时器
-            animTimer = new Timer();
             animTimer.Interval = 100;
             
             this.ResumeLayout(false);
@@ -365,7 +378,7 @@ namespace MainControlProcessModule
             // 四个主要刻度（90 度间隔）
             for (int i = 0; i < 4; i++)
             {
-                float angle = i * Math.PI / 2;
+                float angle = (float)(i * Math.PI / 2);
                 int x1 = center + (int)(radius * Math.Cos(angle));
                 int y1 = center - (int)(radius * Math.Sin(angle));
                 int x2 = center + (int)((radius - 15) * Math.Cos(angle));
@@ -385,54 +398,66 @@ namespace MainControlProcessModule
             // 绘制指针
             PointF centerPoint = new PointF(center, center);
             float pointerLength = radius - 20;
-            float pointerX = center + pointerLength * Math.Cos(currentRad);
-            float pointerY = center - pointerLength * Math.Sin(currentRad);
+            float currentRadFloat = (float)_hub.U.Current;
+            float pointerX = center + (float)(pointerLength * Math.Cos(currentRadFloat));
+            float pointerY = center - (float)(pointerLength * Math.Sin(currentRadFloat));
             
-            using (Pen pointerPen = new Pen(Color.Red, 3))
-            using (Brush arrowBrush = new SolidBrush(Color.Red))
+            // 声明绘图资源
+            Pen pointerPen = null;
+            Brush arrowBrush = null;
+            
+            try
             {
+                pointerPen = new Pen(Color.Red, 3);
+                arrowBrush = new SolidBrush(Color.Red);
+                
                 // 绘制指针线
                 g.DrawLine(pointerPen, centerPoint.X, centerPoint.Y, pointerX, pointerY);
                 
                 // 绘制箭头三角形
-                float arrowAngle = currentRad + Math.PI / 2;
+                float arrowAngle = currentRadFloat + (float)(Math.PI / 2);
                 float arrowLen = 15;
                 PointF arrowHead1 = new PointF(
-                    pointerX + arrowLen * Math.Cos(arrowAngle),
-                    pointerY - arrowLen * Math.Sin(arrowAngle));
-                float arrowAngle2 = currentRad - Math.PI / 2;
+                    pointerX + (float)(arrowLen * Math.Cos(arrowAngle)),
+                    pointerY - (float)(arrowLen * Math.Sin(arrowAngle)));
+                float arrowAngle2 = currentRadFloat - (float)(Math.PI / 2);
                 PointF arrowHead2 = new PointF(
-                    pointerX + arrowLen * Math.Cos(arrowAngle2),
-                    pointerY - arrowLen * Math.Sin(arrowAngle2));
+                    pointerX + (float)(arrowLen * Math.Cos(arrowAngle2)),
+                    pointerY - (float)(arrowLen * Math.Sin(arrowAngle2)));
                 
                 GraphicsPath arrowPath = new GraphicsPath();
                 arrowPath.AddLine(centerPoint.X, centerPoint.Y, pointerX, pointerY);
                 arrowPath.AddLine(pointerX, pointerY, arrowHead1.X, arrowHead1.Y);
                 arrowPath.AddLine(arrowHead1.X, arrowHead1.Y, arrowHead2.X, arrowHead2.Y);
-                arrowPath.AddCloseForce();
+                arrowPath.AddBezier(new PointF(center, center), new PointF(pointerX, pointerY), arrowHead1, arrowHead2);
                 
                 g.FillPath(arrowBrush, arrowPath);
             }
+            finally
+            {
+                if (pointerPen != null) pointerPen.Dispose();
+                if (arrowBrush != null) arrowBrush.Dispose();
+            }
             
             // 绘制范围标记（基于全局参数）
-            float minRad = globalSetting.UMin;
-            float maxRad = globalSetting.UMax;
+            float minRad = (float)globalSetting.UMin;
+            float maxRad = (float)globalSetting.UMax;
             double minDeg = minRad * 180.0 / Math.PI;
             double maxDeg = maxRad * 180.0 / Math.PI;
             
             Brush rangeBrush = new SolidBrush(Color.FromArgb(100, Color.Green));
             
             // 计算最小和最大角度的坐标位置
-            float minPointerX = center + pointerLength * Math.Cos(minRad);
-            float minPointerY = center - pointerLength * Math.Sin(minRad);
-            float maxPointerX = center + pointerLength * Math.Cos(maxRad);
-            float maxPointerY = center - pointerLength * Math.Sin(maxRad);
+            float minPointerX = center + (float)(pointerLength * Math.Cos(minRad));
+            float minPointerY = center - (float)(pointerLength * Math.Sin(minRad));
+            float maxPointerX = center + (float)(pointerLength * Math.Cos(maxRad));
+            float maxPointerY = center - (float)(pointerLength * Math.Sin(maxRad));
             
             // 绘制范围区域扇形
             using (GraphicsPath arcPath = new GraphicsPath())
             {
                 arcPath.AddLine(center, center, minPointerX, minPointerY);
-                arcPath.AddArc(circleRect, minRad * 180 / Math.PI, (maxRad - minRad) * 180 / Math.PI);
+                arcPath.AddArc(circleRect, (float)(minRad * 180 / Math.PI), (float)((maxRad - minRad) * 180 / Math.PI));
                 arcPath.AddLine(center, center, maxPointerX, maxPointerY);
                 arcPath.CloseFigure();
                 g.FillPath(rangeBrush, arcPath);
@@ -442,8 +467,6 @@ namespace MainControlProcessModule
             g.Dispose();
             outerPen.Dispose();
             innerPen.Dispose();
-            pointerPen.Dispose();
-            arrowBrush.Dispose();
             textBrush.Dispose();
             axisLabelFont.Dispose();
             smallFont.Dispose();
@@ -454,12 +477,6 @@ namespace MainControlProcessModule
         {
             get { return _module.globalSetting; }
         }
-
-        private Timer animTimer;
-
-        private Label lbl_status;
-        private JogButton jogButtonPlus;
-        private JogButton jogButtonMinus;
 
         #endregion
     }

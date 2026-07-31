@@ -54,9 +54,11 @@
     </Compile>
     <!-- 公共业务层（每个模块都需要） -->
     <Compile Include="Logic\AxisController.cs" />
+    <Compile Include="Logic\AxisJogService.cs" />
     <Compile Include="Logic\AxisPosition.cs" />
     <Compile Include="Logic\IMotionService.cs" />
     <Compile Include="Logic\XyzControllerHub.cs" />
+    <Compile Include="Logic\JogMode.cs" />
     <Compile Include="Logic\MotionCommand.cs" />
     <!-- 自定义控件 -->
     <Compile Include="Controls\XYView.cs" />

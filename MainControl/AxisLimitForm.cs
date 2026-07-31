@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using ProcessModules;
 
 namespace MainControlProcessModule
 {
@@ -10,7 +11,7 @@ namespace MainControlProcessModule
     public partial class AxisLimitForm : Form
     {
         private readonly MainControlGlobalSetting _setting;
-        private readonly XyzControllerHub _hub;
+        private readonly ProcessModules.XyzControllerHub _hub;
         private readonly UnifiedRunForm _runForm;
 
         /// <summary>
@@ -19,7 +20,7 @@ namespace MainControlProcessModule
         /// <param name="setting">全局参数对象（读取/写回轴范围）。</param>
         /// <param name="hub">业务层（应用新范围）。</param>
         /// <param name="runForm">运行界面（刷新视图范围）。</param>
-        public AxisLimitForm(MainControlGlobalSetting setting, XyzControllerHub hub, UnifiedRunForm runForm)
+        public AxisLimitForm(MainControlGlobalSetting setting, ProcessModules.XyzControllerHub hub, UnifiedRunForm runForm)
         {
             _setting = setting;
             _hub = hub;

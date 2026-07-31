@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ProcessModules;
 
 namespace MainControlProcessModule
 {
@@ -64,7 +65,7 @@ namespace MainControlProcessModule
 
             // 1) 从所属工艺模组获取业务层（模组持有 Hub，界面与其共享）
             _hub = _module.Hub;
-            trbSpeed.Value = MathHelper.Clamp(_hub.SpeedSetting, trbSpeed.Minimum, trbSpeed.Maximum);
+            trbSpeed.Value = ProcessModules.MathHelper.Clamp(_hub.SpeedSetting, trbSpeed.Minimum, trbSpeed.Maximum);
 
             // 2) 同步自定义视图的范围（XYView/ZBarView 自己维护坐标范围）
             xyView.RangeMin = trbX.Minimum;
@@ -216,7 +217,7 @@ namespace MainControlProcessModule
         private void Trb_Scroll(object sender, EventArgs e)
         {
             TrackBar trb = (TrackBar)sender;
-            AxisController axis = (AxisController)trb.Tag;
+            ProcessModules.AxisController axis = (ProcessModules.AxisController)trb.Tag;
             axis.SetTarget(trb.Value);
         }
 
@@ -224,7 +225,7 @@ namespace MainControlProcessModule
         private void Nud_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown nud = (NumericUpDown)sender;
-            AxisController axis = (AxisController)nud.Tag;
+            ProcessModules.AxisController axis = (ProcessModules.AxisController)nud.Tag;
             axis.SetTarget((float)nud.Value);
         }
 
@@ -232,7 +233,7 @@ namespace MainControlProcessModule
         private void BtnStep_Click(object sender, EventArgs e)
         {
             object[] data = (object[])((Control)sender).Tag;
-            AxisController axis = (AxisController)data[0];
+            ProcessModules.AxisController axis = (ProcessModules.AxisController)data[0];
             int direction = (int)data[1];
             axis.Step(direction);
         }
@@ -253,32 +254,32 @@ namespace MainControlProcessModule
         // —— JOG 模式切换 ——
         private void RbMode_CheckedChanged(object sender, EventArgs e)
         {
-            JogMode m = rbIncremental.Checked ? JogMode.Incremental : JogMode.Continuous;
-            ForEachJog(delegate(AxisJogService s) { s.SetMode(m); });
+            ProcessModules.JogMode m = rbIncremental.Checked ? ProcessModules.JogMode.Incremental : ProcessModules.JogMode.Continuous;
+            ForEachJog(delegate(ProcessModules.AxisJogService s) { s.SetMode(m); });
         }
 
         // —— JOG 步长 ——
         private void NudJogStep_ValueChanged(object sender, EventArgs e)
         {
             float step = (float)nudJogStep.Value;
-            ForEachJog(delegate(AxisJogService s) { s.SetStepDistance(step); });
+            ForEachJog(delegate(ProcessModules.AxisJogService s) { s.SetStepDistance(step); });
         }
 
         // —— 急停 ——
         private void BtnEStop_Click(object sender, EventArgs e)
         {
-            ForEachJog(delegate(AxisJogService s) { s.EmergencyStop(); });
+            ForEachJog(delegate(ProcessModules.AxisJogService s) { s.EmergencyStop(); });
         }
 
         /// <summary>对三个 JOG 服务统一执行操作。</summary>
-        private void ForEachJog(Action<AxisJogService> action)
+        private void ForEachJog(Action<ProcessModules.AxisJogService> action)
         {
-            foreach (AxisJogService s in _jogServices)
+            foreach (ProcessModules.AxisJogService s in _jogServices)
                 action(s);
         }
 
         // —— 鼠标点击 XY 视图设定目标 ——
-        private void XyView_TargetSetByMouse(object sender, TargetSetEventArgs e)
+        private void XyView_TargetSetByMouse(object sender, ProcessModules.TargetSetEventArgs e)
         {
             _hub.X.SetTarget(e.X);
             _hub.Y.SetTarget(e.Y);
@@ -288,25 +289,25 @@ namespace MainControlProcessModule
         /// 把 JogButton 控件的事件接到 AxisJogService。
         /// JogButton.Jog 事件会在按下/重复触发时调用；Stop 在松开时调用。
         /// </summary>
-        private void BindJogButton(JogButton btn, AxisJogService service)
+        private void BindJogButton(ProcessModules.JogButton btn, ProcessModules.AxisJogService service)
         {
             // 把 service 通过 closure 替换为 JogButton.Tag 携带，便于在命名方法里取回。
             btn.Tag = service;
-            btn.Jog += new EventHandler<JogEventArgs>(JogButton_Jog);
-            btn.Stop += new EventHandler<JogEventArgs>(JogButton_Stop);
+            btn.Jog += new EventHandler<ProcessModules.JogEventArgs>(JogButton_Jog);
+            btn.Stop += new EventHandler<ProcessModules.JogEventArgs>(JogButton_Stop);
         }
 
-        private void JogButton_Jog(object sender, JogEventArgs e)
+        private void JogButton_Jog(object sender, ProcessModules.JogEventArgs e)
         {
-            JogButton btn = (JogButton)sender;
-            AxisJogService service = (AxisJogService)btn.Tag;
+            ProcessModules.JogButton btn = (ProcessModules.JogButton)sender;
+            ProcessModules.AxisJogService service = (ProcessModules.AxisJogService)btn.Tag;
             service.OnJogStart(e.Direction);
         }
 
-        private void JogButton_Stop(object sender, JogEventArgs e)
+        private void JogButton_Stop(object sender, ProcessModules.JogEventArgs e)
         {
-            JogButton btn = (JogButton)sender;
-            AxisJogService service = (AxisJogService)btn.Tag;
+            ProcessModules.JogButton btn = (ProcessModules.JogButton)sender;
+            ProcessModules.AxisJogService service = (ProcessModules.AxisJogService)btn.Tag;
             service.OnJogStop();
         }
 
@@ -357,17 +358,17 @@ namespace MainControlProcessModule
             try
             {
                 // 滑块（必须整数）
-                trbX.Value = MathHelper.Clamp((int)Math.Round(_hub.X.Target), trbX.Minimum, trbX.Maximum);
-                trbY.Value = MathHelper.Clamp((int)Math.Round(_hub.Y.Target), trbY.Minimum, trbY.Maximum);
-                trbZ.Value = MathHelper.Clamp((int)Math.Round(_hub.Z.Target), trbZ.Minimum, trbZ.Maximum);
+                trbX.Value = ProcessModules.MathHelper.Clamp((int)Math.Round(_hub.X.Target), trbX.Minimum, trbX.Maximum);
+                trbY.Value = ProcessModules.MathHelper.Clamp((int)Math.Round(_hub.Y.Target), trbY.Minimum, trbY.Maximum);
+                trbZ.Value = ProcessModules.MathHelper.Clamp((int)Math.Round(_hub.Z.Target), trbZ.Minimum, trbZ.Maximum);
 
                 // 数字框（支持小数）
                 if (nudX.Value != (decimal)_hub.X.Target)
-                    nudX.Value = MathHelper.Clamp((decimal)_hub.X.Target, nudX.Minimum, nudX.Maximum);
+                    nudX.Value = ProcessModules.MathHelper.Clamp((decimal)_hub.X.Target, nudX.Minimum, nudX.Maximum);
                 if (nudY.Value != (decimal)_hub.Y.Target)
-                    nudY.Value = MathHelper.Clamp((decimal)_hub.Y.Target, nudY.Minimum, nudY.Maximum);
+                    nudY.Value = ProcessModules.MathHelper.Clamp((decimal)_hub.Y.Target, nudY.Minimum, nudY.Maximum);
                 if (nudZ.Value != (decimal)_hub.Z.Target)
-                    nudZ.Value = MathHelper.Clamp((decimal)_hub.Z.Target, nudZ.Minimum, nudZ.Maximum);
+                    nudZ.Value = ProcessModules.MathHelper.Clamp((decimal)_hub.Z.Target, nudZ.Minimum, nudZ.Maximum);
 
                 // 自定义视图：目标和当前都同步
                 xyView.TargetX = _hub.X.Target;
@@ -481,9 +482,9 @@ namespace MainControlProcessModule
         /// </summary>
         private void PointInfoView_JumpToPointRequested(object sender, int pointIndex)
         {
-            if (pointIndex >= 0 && projectSetting.Presets.Count > pointIndex)
+            if (pointIndex >= 0 && _module.projectSetting.Presets.Count > pointIndex)
             {
-                var preset = projectSetting.Presets[pointIndex];
+                var preset = _module.projectSetting.Presets[pointIndex];
                 _hub.SetTarget(preset.X, preset.Y, preset.Z);
                 lblStatus.Text = string.Format("跳转到点位：{0} → X={1:F2} Y={2:F2} Z={3:F2}",
                     preset.Name ?? "无名", preset.X, preset.Y, preset.Z);
@@ -495,10 +496,10 @@ namespace MainControlProcessModule
         /// </summary>
         private void LoadPointsToUI()
         {
-            if (projectSetting != null && projectSetting.Presets != null)
+            if (_module.projectSetting != null && _module.projectSetting.Presets != null)
             {
                 // 调用 PointInfoView 更新数据
-                pointInfoView.UpdatePoints(projectSetting.Presets);
+                pointInfoView.UpdatePoints(_module.projectSetting.Presets);
             }
         }
     }

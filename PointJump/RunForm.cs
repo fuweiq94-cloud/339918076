@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using ProcessModules;
 namespace PointJumpProcessModule
 {
     /// <summary>
@@ -24,13 +25,13 @@ namespace PointJumpProcessModule
         private readonly PointJumpProcessModule _module;
 
         // —— 业务核心（OnLoad 中从模组获取）——
-        private XyzControllerHub _hub;
+        private ProcessModules.XyzControllerHub _hub;
 
         // —— UI 同步锁 ——
         private bool _syncing;
 
         // —— 预设点位列表（与工艺模组项目参数共享同一实例）——
-        private readonly List<PresetPoint> _presets;
+        private readonly List<ProcessModules.PresetPoint> _presets;
         private int _presetCounter;
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace PointJumpProcessModule
 
             // 1) 从所属工艺模组获取业务层（模组持有 Hub，界面与其共享）
             _hub = _module.Hub;
-            trbSpeed.Value = MathHelper.Clamp(_hub.SpeedSetting, trbSpeed.Minimum, trbSpeed.Maximum);
+            trbSpeed.Value = ProcessModules.MathHelper.Clamp(_hub.SpeedSetting, trbSpeed.Minimum, trbSpeed.Maximum);
 
             // 2) 绑定 UI 事件
             HookEvents();
@@ -127,7 +128,7 @@ namespace PointJumpProcessModule
             btnGotoSelected.Click += new EventHandler(BtnGotoSelected_Click);
             trbSpeed.Scroll += new EventHandler(TrbSpeed_Scroll);
             lvPresets.DoubleClick += new EventHandler(LvPresets_DoubleClick);
-            xyView.TargetSetByMouse += new EventHandler<TargetSetEventArgs>(XyView_TargetSetByMouse);
+            xyView.TargetSetByMouse += new EventHandler<ProcessModules.TargetSetEventArgs>(XyView_TargetSetByMouse);
             this.KeyDown += new KeyEventHandler(RunForm_KeyDown);
         }
 
@@ -147,7 +148,7 @@ namespace PointJumpProcessModule
         private void BtnSavePos_Click(object sender, EventArgs e)
         {
             _presetCounter++;
-            PresetPoint pt = new PresetPoint();
+            ProcessModules.PresetPoint pt = new ProcessModules.PresetPoint();
             pt.Name = "P" + _presetCounter.ToString();
             pt.X = _hub.X.Target;
             pt.Y = _hub.Y.Target;
@@ -191,7 +192,7 @@ namespace PointJumpProcessModule
         }
 
         /// <summary>鼠标点击 XY 视图设定目标。</summary>
-        private void XyView_TargetSetByMouse(object sender, TargetSetEventArgs e)
+        private void XyView_TargetSetByMouse(object sender, ProcessModules.TargetSetEventArgs e)
         {
             _hub.X.SetTarget(e.X);
             _hub.Y.SetTarget(e.Y);
@@ -316,7 +317,7 @@ namespace PointJumpProcessModule
             int idx = lvPresets.SelectedIndices[0];
             if (idx >= 0 && idx < _presets.Count)
             {
-                PresetPoint pt = _presets[idx];
+                ProcessModules.PresetPoint pt = _presets[idx];
                 _hub.SetTarget(pt.X, pt.Y, pt.Z);
                 UpdateStatus("跳转到预设 " + pt.Name + " (X=" + pt.X.ToString("F2")
                     + " Y=" + pt.Y.ToString("F2") + " Z=" + pt.Z.ToString("F2") + ")");
@@ -334,7 +335,7 @@ namespace PointJumpProcessModule
             lvPresets.Items.Clear();
             for (int i = 0; i < _presets.Count; i++)
             {
-                PresetPoint pt = _presets[i];
+                ProcessModules.PresetPoint pt = _presets[i];
                 ListViewItem item = new ListViewItem(pt.Name);
                 item.SubItems.Add(pt.X.ToString("F2"));
                 item.SubItems.Add(pt.Y.ToString("F2"));

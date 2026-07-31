@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ProcessModules;
 
 namespace TrajectoryViewProcessModule
 {
@@ -25,6 +26,7 @@ namespace TrajectoryViewProcessModule
 
         // —— 业务核心（OnLoad 中从模组获取）——
         private XyzControllerHub _hub;
+
 
         // —— UI 同步锁 ——
         private bool _syncing;

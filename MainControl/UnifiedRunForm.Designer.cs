@@ -1,3 +1,5 @@
+using ProcessModules;
+
 namespace MainControlProcessModule
 {
     /// <summary>
@@ -153,9 +155,9 @@ namespace MainControlProcessModule
             this.btnJump = new System.Windows.Forms.Button();
             this.grpDro = new System.Windows.Forms.GroupBox();
             this.tlpDro = new System.Windows.Forms.TableLayoutPanel();
-            this.droX = new MainControlProcessModule.DroLabel();
-            this.droY = new MainControlProcessModule.DroLabel();
-            this.droZ = new MainControlProcessModule.DroLabel();
+            this.droX = new ProcessModules.DroLabel();
+            this.droY = new ProcessModules.DroLabel();
+            this.droZ = new ProcessModules.DroLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.animTimer = new System.Windows.Forms.Timer(this.components);

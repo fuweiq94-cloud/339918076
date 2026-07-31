@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using InterfaceDefine;
+using ProcessModules;
 
 namespace PointJumpProcessModule
 {
@@ -15,7 +16,7 @@ namespace PointJumpProcessModule
         public string Name;
 
         /// <summary>预设点位列表（与 PointJumpForm 共享同一实例）。</summary>
-        public List<PresetPoint> Presets = new List<PresetPoint>();
+        public List<ProcessModules.PresetPoint> Presets = new List<ProcessModules.PresetPoint>();
 
         /// <summary>本项目中累计执行跳转命令的次数。</summary>
         public int JumpCount;
@@ -44,7 +45,7 @@ namespace PointJumpProcessModule
             }
             pDoc.Name = actionerName;
             if (pDoc.Presets == null)
-                pDoc.Presets = new List<PresetPoint>();
+                pDoc.Presets = new List<ProcessModules.PresetPoint>();
             return pDoc;
         }
 

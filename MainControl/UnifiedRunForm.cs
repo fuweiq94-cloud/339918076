@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using ProcessModules;
 
 namespace MainControlProcessModule
 {
@@ -12,12 +13,12 @@ namespace MainControlProcessModule
     public partial class UnifiedRunForm : Form
     {
         private readonly MainControlProcessModule _module;
-        private XyzControllerHub _hub;
-        private AxisJogService[] _jogServices;
+        private ProcessModules.XyzControllerHub _hub;
+        private ProcessModules.AxisJogService[] _jogServices;
         private bool _syncing;
 
         // 预设点位（与 PointJumpProjectSetting 共享）
-        private readonly List<PresetPoint> _presets;
+        private readonly List<ProcessModules.PresetPoint> _presets;
         private int _presetCounter;
 
         /// <summary>
@@ -59,11 +60,11 @@ namespace MainControlProcessModule
             _hub.Changed += new EventHandler(Hub_Changed);
 
             // JOG 服务
-            _jogServices = new AxisJogService[]
+            _jogServices = new ProcessModules.AxisJogService[]
             {
-                new AxisJogService(_hub.X),
-                new AxisJogService(_hub.Y),
-                new AxisJogService(_hub.Z)
+                new ProcessModules.AxisJogService(_hub.X),
+                new ProcessModules.AxisJogService(_hub.Y),
+                new ProcessModules.AxisJogService(_hub.Z)
             };
             ApplyJogSetting();
 
@@ -130,27 +131,27 @@ namespace MainControlProcessModule
             trbSpeed.Scroll += new EventHandler(TrbSpeed_Scroll);
 
             // XYView 鼠标
-            xyView.TargetSetByMouse += new EventHandler<TargetSetEventArgs>(XyView_TargetSetByMouse);
+            xyView.TargetSetByMouse += new EventHandler<ProcessModules.TargetSetEventArgs>(XyView_TargetSetByMouse);
 
             // 键盘
             this.KeyDown += new KeyEventHandler(UnifiedRunForm_KeyDown);
         }
 
-        private void BindJogButton(JogButton btn, int axisIndex)
+        private void BindJogButton(ProcessModules.JogButton btn, int axisIndex)
         {
             btn.Tag = axisIndex;
-            btn.Jog += new EventHandler<JogEventArgs>(JogButton_Jog);
-            btn.Stop += new EventHandler<JogEventArgs>(JogButton_Stop);
+            btn.Jog += new EventHandler<ProcessModules.JogEventArgs>(JogButton_Jog);
+            btn.Stop += new EventHandler<ProcessModules.JogEventArgs>(JogButton_Stop);
         }
 
         private void ApplyJogSetting()
         {
             MainControlGlobalSetting gs = _module.globalSetting;
-            JogMode mode = gs.JogIncremental ? JogMode.Incremental : JogMode.Continuous;
+            ProcessModules.JogMode mode = gs.JogIncremental ? ProcessModules.JogMode.Incremental : ProcessModules.JogMode.Continuous;
             rbIncremental.Checked = gs.JogIncremental;
             rbContinuous.Checked = !gs.JogIncremental;
             nudJogStep.Value = (decimal)gs.JogStep;
-            foreach (AxisJogService s in _jogServices)
+            foreach (ProcessModules.AxisJogService s in _jogServices)
             {
                 s.SetMode(mode);
                 s.SetStepDistance(gs.JogStep);
@@ -208,42 +209,42 @@ namespace MainControlProcessModule
             int idx = lvPresets.SelectedIndices[0];
             if (idx >= 0 && idx < _presets.Count)
             {
-                PresetPoint pt = _presets[idx];
+                ProcessModules.PresetPoint pt = _presets[idx];
                 _hub.SetTarget(pt.X, pt.Y, pt.Z);
             }
         }
 
         private void RbMode_CheckedChanged(object sender, EventArgs e)
         {
-            JogMode m = rbIncremental.Checked ? JogMode.Incremental : JogMode.Continuous;
-            foreach (AxisJogService s in _jogServices)
+            ProcessModules.JogMode m = rbIncremental.Checked ? ProcessModules.JogMode.Incremental : ProcessModules.JogMode.Continuous;
+            foreach (ProcessModules.AxisJogService s in _jogServices)
                 s.SetMode(m);
         }
 
         private void NudJogStep_ValueChanged(object sender, EventArgs e)
         {
             float step = (float)nudJogStep.Value;
-            foreach (AxisJogService s in _jogServices)
+            foreach (ProcessModules.AxisJogService s in _jogServices)
                 s.SetStepDistance(step);
         }
 
-        private void JogButton_Jog(object sender, JogEventArgs e)
+        private void JogButton_Jog(object sender, ProcessModules.JogEventArgs e)
         {
-            JogButton btn = (JogButton)sender;
+            ProcessModules.JogButton btn = (ProcessModules.JogButton)sender;
             int idx = (int)btn.Tag;
             _jogServices[idx].OnJogStart(e.Direction);
         }
 
-        private void JogButton_Stop(object sender, JogEventArgs e)
+        private void JogButton_Stop(object sender, ProcessModules.JogEventArgs e)
         {
-            JogButton btn = (JogButton)sender;
+            ProcessModules.JogButton btn = (ProcessModules.JogButton)sender;
             int idx = (int)btn.Tag;
             _jogServices[idx].OnJogStop();
         }
 
         private void BtnEStop_Click(object sender, EventArgs e)
         {
-            foreach (AxisJogService s in _jogServices)
+            foreach (ProcessModules.AxisJogService s in _jogServices)
                 s.EmergencyStop();
         }
 
@@ -377,7 +378,7 @@ namespace MainControlProcessModule
             lvPresets.Items.Clear();
             for (int i = 0; i < _presets.Count; i++)
             {
-                PresetPoint pt = _presets[i];
+                ProcessModules.PresetPoint pt = _presets[i];
                 ListViewItem item = new ListViewItem(pt.Name);
                 item.SubItems.Add(pt.X.ToString("F2"));
                 item.SubItems.Add(pt.Y.ToString("F2"));
