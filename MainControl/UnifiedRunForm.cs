@@ -15,6 +15,10 @@ namespace MainControlProcessModule
         private readonly MainControlProcessModule _module;
         private ProcessModules.XyzControllerHub _hub;
         private ProcessModules.AxisJogService[] _jogServices;
+
+        /// <summary>外部注入的 JOG 服务数组（由模组层创建，优先使用）。</summary>
+        public ProcessModules.AxisJogService[] ExternalJogServices { get; set; }
+
         private bool _syncing;
 
         // 预设点位（与 PointJumpProjectSetting 共享）
@@ -59,13 +63,16 @@ namespace MainControlProcessModule
             // 监听 hub 变化
             _hub.Changed += new EventHandler(Hub_Changed);
 
-            // JOG 服务
-            _jogServices = new ProcessModules.AxisJogService[]
-            {
-                new ProcessModules.AxisJogService(_hub.X),
-                new ProcessModules.AxisJogService(_hub.Y),
-                new ProcessModules.AxisJogService(_hub.Z)
-            };
+            // JOG 服务：优先使用模组层传入的，否则本地创建
+            if (ExternalJogServices != null)
+                _jogServices = ExternalJogServices;
+            else
+                _jogServices = new ProcessModules.AxisJogService[]
+                {
+                    new ProcessModules.AxisJogService(_hub.X),
+                    new ProcessModules.AxisJogService(_hub.Y),
+                    new ProcessModules.AxisJogService(_hub.Z)
+                };
             ApplyJogSetting();
 
             // 预设点位

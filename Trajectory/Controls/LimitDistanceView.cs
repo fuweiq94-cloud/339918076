@@ -80,13 +80,11 @@ namespace ProcessModules
             Brush textBrush = Brushes.Black;
             Font smallFont = new Font("Consolas", 9F);
             Font axisLabelFont = new Font("微软雅黑", 10F, FontStyle.Bold);
-            Brush[] axisBrushes = new Color[]
-            {
-                _warningColors[0],
-                _warningColors[1],
-                _warningColors[2],
-                _warningColors[3]
-            }.Select(c => new SolidBrush(c)).ToArray();
+            Brush[] axisBrushes = new Brush[4];
+            axisBrushes[0] = new SolidBrush(_warningColors[0]);
+            axisBrushes[1] = new SolidBrush(_warningColors[1]);
+            axisBrushes[2] = new SolidBrush(_warningColors[2]);
+            axisBrushes[3] = new SolidBrush(_warningColors[3]);
 
             try
             {

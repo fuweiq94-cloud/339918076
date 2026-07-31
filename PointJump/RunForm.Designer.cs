@@ -109,7 +109,6 @@ namespace PointJumpProcessModule
             this.droX = new DroLabel();
             this.droY = new DroLabel();
             this.droZ = new DroLabel();
-            this.limitDistView = new LimitDistanceView();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.animTimer = new System.Windows.Forms.Timer(this.components);
@@ -168,6 +167,16 @@ namespace PointJumpProcessModule
             this.xyView.Name = "xyView";
             this.xyView.Size = new System.Drawing.Size(1512, 1077);
             this.xyView.TabIndex = 0;
+            // 
+            // limitDistView
+            // 
+            this.limitDistView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.limitDistView.Height = 160;
+            this.limitDistView.Location = new System.Drawing.Point(12, 917);
+            this.limitDistView.Margin = new System.Windows.Forms.Padding(6);
+            this.limitDistView.Name = "limitDistView";
+            this.limitDistView.Size = new System.Drawing.Size(1512, 160);
+            this.limitDistView.TabIndex = 1;
             // 
             // pnlRight
             // 

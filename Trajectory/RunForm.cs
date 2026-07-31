@@ -329,23 +329,9 @@ namespace TrajectoryViewProcessModule
         private void UpdateLimitDistances()
         {
             if (limitDistView == null) return;
-
-            // X 轴
-            float xMinRemain = _hub.X.Current - _hub.X.Min;  // 距下限位
-            float xMaxRemain = _hub.X.Max - _hub.X.Current; // 距上限位
-            float xRemaining = (_hub.X.Current <= (_hub.X.Min + _hub.X.Max) / 2) ? -xMinRemain : xMaxRemain;
-
-            // Y 轴
-            float yMinRemain = _hub.Y.Current - _hub.Y.Min;
-            float yMaxRemain = _hub.Y.Max - _hub.Y.Current;
-            float yRemaining = (_hub.Y.Current <= (_hub.Y.Min + _hub.Y.Max) / 2) ? -yMinRemain : yMaxRemain;
-
-            // Z 轴
-            float zMinRemain = _hub.Z.Current - _hub.Z.Min;
-            float zMaxRemain = _hub.Z.Max - _hub.Z.Current;
-            float zRemaining = (_hub.Z.Current <= (_hub.Z.Min + _hub.Z.Max) / 2) ? -zMinRemain : zMaxRemain;
-
-            limitDistView.UpdateDistances(xRemaining, yRemaining, zRemaining, 0f);  // Trajectory 只有 XYZ 三轴
+            float x, y, z, u;
+            _hub.GetAllLimitRemaining(out x, out y, out z, out u);
+            limitDistView.UpdateDistances(x, y, z, u);
         }
     }
 }

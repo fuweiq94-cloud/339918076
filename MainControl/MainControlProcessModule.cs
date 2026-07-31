@@ -38,6 +38,9 @@ namespace MainControlProcessModule
         /// <summary>模组持有的 XYZ 控制器（集成现有业务层）。</summary>
         public XyzControllerHub Hub { get { return _hub; } }
 
+        /// <summary>模组持有的 JOG 服务数组（XYZU 四轴）。</summary>
+        public AxisJogService[] JogServices { get { return _jogServices; } }
+
         public override dynamic FunctionCaller
         {
             get { return this; }
@@ -218,6 +221,7 @@ namespace MainControlProcessModule
             if (unifiedRunForm == null || unifiedRunForm.IsDisposed)
                 unifiedRunForm = new UnifiedRunForm(this);
 
+            unifiedRunForm.ExternalJogServices = _jogServices;
             unifiedRunForm.TopLevel = false;
             panel.Controls.Add(unifiedRunForm);
             unifiedRunForm.Dock = DockStyle.Fill;

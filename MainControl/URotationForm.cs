@@ -96,8 +96,8 @@ namespace MainControlProcessModule
         {
             base.OnLoad(e);
             _hub.Changed += Hub_Changed;
-            nud_target.Enter += (s, args) => lbl_status.Text = "输入目标角度后按 Enter 或点击设置按钮";
-            nud_target.Leave += (s, args) => lbl_status.Text = "U 轴旋转控制";
+            nud_target.Enter += new EventHandler(NudTarget_Enter);
+            nud_target.Leave += new EventHandler(NudTarget_Leave);
         }
 
         /// <summary>窗体关闭时退订 Hub 变化</summary>
@@ -245,7 +245,7 @@ namespace MainControlProcessModule
             nud_target.Size = new Size(120, 23);
             nud_target.DecimalPlaces = 2;
             nud_target.Increment = new decimal(1);
-            nud_target.KeyDown += (sender, e) => { if (e.KeyCode == Keys.Enter) SetTargetAngle(); };
+            nud_target.KeyDown += new KeyEventHandler(NudTarget_KeyDown);
             
             // 
             // btn_set_target
@@ -254,7 +254,7 @@ namespace MainControlProcessModule
             btnSetTarget.Location = new Point(100, 50);
             btnSetTarget.Size = new Size(120, 30);
             btnSetTarget.Text = "设置目标";
-            btnSetTarget.Click += (s, args) => SetTargetAngle();
+            btnSetTarget.Click += new EventHandler(BtnSetTarget_Click);
             
             // 
             // btn_home
@@ -289,7 +289,7 @@ namespace MainControlProcessModule
             lblSpeed.Text = "JOG\n步长\n调节";
             lblSpeed.Location = new Point(260, 80);
             lblSpeed.AutoSize = true;
-            trb_jogstep.Scroll += (sender, args) => { _jogService.SetStepDistance((float)trb_jogstep.Value / 10f); };
+            trb_jogstep.Scroll += new EventHandler(TrbJogstep_Scroll);
             
             this.Controls.Add(trb_jogstep);
             this.Controls.Add(lblSpeed);
@@ -329,6 +329,36 @@ namespace MainControlProcessModule
             
             this.ResumeLayout(false);
         }
+
+        #region 命名事件处理方法
+
+        private void NudTarget_Enter(object sender, EventArgs e)
+        {
+            lbl_status.Text = "输入目标角度后按 Enter 或点击设置按钮";
+        }
+
+        private void NudTarget_Leave(object sender, EventArgs e)
+        {
+            lbl_status.Text = "U 轴旋转控制";
+        }
+
+        private void NudTarget_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) SetTargetAngle();
+        }
+
+        private void BtnSetTarget_Click(object sender, EventArgs e)
+        {
+            SetTargetAngle();
+        }
+
+        private void TrbJogstep_Scroll(object sender, EventArgs e)
+        {
+            TrackBar trb = (TrackBar)sender;
+            _jogService.SetStepDistance((float)trb.Value / 10f);
+        }
+
+        #endregion
 
         #region JOG 控制事件处理
 

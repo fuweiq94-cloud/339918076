@@ -30,6 +30,9 @@ namespace MainControlProcessModule
         // —— JOG 服务：每个轴一个 ——
         private AxisJogService[] _jogServices;
 
+        /// <summary>外部注入的 JOG 服务数组（由模组层创建，RunForm 优先使用）。</summary>
+        public AxisJogService[] ExternalJogServices { get; set; }
+
         // —— UI 同步锁：防止 hub.Changed 回调里又改 UI 触发新事件 ——
         private bool _syncing;
 
@@ -159,13 +162,16 @@ namespace MainControlProcessModule
 
             trbSpeed.Scroll += new EventHandler(TrbSpeed_Scroll);
 
-            // —— JOG 服务：三轴各创建一个 ——
-            _jogServices = new AxisJogService[]
-            {
-                new AxisJogService(_hub.X),
-                new AxisJogService(_hub.Y),
-                new AxisJogService(_hub.Z)
-            };
+            // —— JOG 服务：优先使用模组层传入的，否则本地创建（兼容旧代码）——
+            if (ExternalJogServices != null)
+                _jogServices = ExternalJogServices;
+            else
+                _jogServices = new AxisJogService[]
+                {
+                    new AxisJogService(_hub.X),
+                    new AxisJogService(_hub.Y),
+                    new AxisJogService(_hub.Z)
+                };
 
             // 寸动 / 连续模式切换
             rbIncremental.CheckedChanged += new EventHandler(RbMode_CheckedChanged);
@@ -421,28 +427,9 @@ namespace MainControlProcessModule
         private void UpdateLimitDistances()
         {
             if (limitDistView == null) return;
-
-            // X 轴
-            float xMinRemain = _hub.X.Current - _hub.X.Min;  // 距下限位
-            float xMaxRemain = _hub.X.Max - _hub.X.Current; // 距上限位
-            float xRemaining = (_hub.X.Current <= (_hub.X.Min + _hub.X.Max) / 2) ? -xMinRemain : xMaxRemain;
-
-            // Y 轴
-            float yMinRemain = _hub.Y.Current - _hub.Y.Min;
-            float yMaxRemain = _hub.Y.Max - _hub.Y.Current;
-            float yRemaining = (_hub.Y.Current <= (_hub.Y.Min + _hub.Y.Max) / 2) ? -yMinRemain : yMaxRemain;
-
-            // Z 轴
-            float zMinRemain = _hub.Z.Current - _hub.Z.Min;
-            float zMaxRemain = _hub.Z.Max - _hub.Z.Current;
-            float zRemaining = (_hub.Z.Current <= (_hub.Z.Min + _hub.Z.Max) / 2) ? -zMinRemain : zMaxRemain;
-
-            // U 轴
-            float uMinRemain = _hub.U.Current - _hub.U.Min;
-            float uMaxRemain = _hub.U.Max - _hub.U.Current;
-            float uRemaining = (_hub.U.Current <= (_hub.U.Min + _hub.U.Max) / 2) ? -uMinRemain : uMaxRemain;
-
-            limitDistView.UpdateDistances(xRemaining, yRemaining, zRemaining, uRemaining);
+            float x, y, z, u;
+            _hub.GetAllLimitRemaining(out x, out y, out z, out u);
+            limitDistView.UpdateDistances(x, y, z, u);
         }
 
         // ============== 状态栏 ==============

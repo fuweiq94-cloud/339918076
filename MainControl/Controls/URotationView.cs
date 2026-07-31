@@ -47,7 +47,7 @@ namespace ProcessModules
         public bool ShowRangeArea { get; set; }
 
         [Category("Appearance")]
-        [DefaultValue(Color.FromArgb(245, 247, 250))]
+        [DefaultValue(typeof(Color), "245, 247, 250")]
         [Description("背景颜色。")]
         public new Color BackColor { get; set; }
 
@@ -93,7 +93,7 @@ namespace ProcessModules
             try
             {
                 // 1️⃣ 绘制背景圆盘
-                using (Path bgPath = new GraphicsPath())
+                using (GraphicsPath bgPath = new GraphicsPath())
                 {
                     bgPath.AddEllipse(centerX - radius, centerY - radius, radius * 2, radius * 2);
                     using (Brush b = new SolidBrush(Color.White))
@@ -107,22 +107,27 @@ namespace ProcessModules
                 // 2️⃣ 绘制范围区域扇形
                 if (ShowRangeArea && RangeMax > RangeMin)
                 {
-                    Path arcPath = new GraphicsPath();
-                    arcPath.AddLine(centerX, centerY,
-                        centerX + (int)(radius * Math.Cos(RangeMin)),
-                        centerY - (int)(radius * Math.Sin(RangeMin)));
-                    
-                    arcPath.AddArc(centerX - radius, centerY - radius, radius * 2, radius * 2,
-                        (float)(RangeMin * 180 / Math.PI),
-                        (float)((RangeMax - RangeMin) * 180 / Math.PI));
-                    
-                    arcPath.AddLine(centerX, centerY,
-                        centerX + (int)(radius * Math.Cos(RangeMax)),
-                        centerY - (int)(radius * Math.Sin(RangeMax)));
-                    arcPath.CloseFigure();
+                    using (GraphicsPath arcPath = new GraphicsPath())
+                    {
+                        arcPath.AddLine(centerX, centerY,
+                            centerX + (int)(radius * Math.Cos(RangeMin)),
+                            centerY - (int)(radius * Math.Sin(RangeMin)));
+                        
+                        arcPath.AddArc(centerX - radius, centerY - radius, radius * 2, radius * 2,
+                            (float)(RangeMin * 180 / Math.PI),
+                            (float)((RangeMax - RangeMin) * 180 / Math.PI));
+                        
+                        arcPath.AddLine(centerX, centerY,
+                            centerX + (int)(radius * Math.Cos(RangeMax)),
+                            centerY - (int)(radius * Math.Sin(RangeMax)));
+                        arcPath.CloseFigure();
 
-                    g.FillPath(rangeBrush, arcPath);
-                    g.DrawPath(new Pen(Color.Green, 1), arcPath);
+                        g.FillPath(rangeBrush, arcPath);
+                        using (Pen arcPen = new Pen(Color.Green, 1))
+                        {
+                            g.DrawPath(arcPen, arcPath);
+                        }
+                    }
                 }
 
                 // 3️⃣ 绘制主要刻度线（四个象限）
@@ -174,13 +179,15 @@ namespace ProcessModules
                         pointerX + arrowLen * Math.Cos(arrowAngle2),
                         pointerY - arrowLen * Math.Sin(arrowAngle2));
 
-                    Path arrowPath = new GraphicsPath();
-                    arrowPath.AddLine(centerX, centerY, pointerX, pointerY);
-                    arrowPath.AddLine(pointerX, pointerY, arrowHead1.X, arrowHead1.Y);
-                    arrowPath.AddLine(arrowHead1.X, arrowHead1.Y, arrowHead2.X, arrowHead2.Y);
-                    arrowPath.AddCloseForce();
+                    using (GraphicsPath arrowPath = new GraphicsPath())
+                    {
+                        arrowPath.AddLine(centerX, centerY, pointerX, pointerY);
+                        arrowPath.AddLine(pointerX, pointerY, arrowHead1.X, arrowHead1.Y);
+                        arrowPath.AddLine(arrowHead1.X, arrowHead1.Y, arrowHead2.X, arrowHead2.Y);
+                        arrowPath.CloseFigure();
 
-                    g.FillPath(arrowBrush, arrowPath);
+                        g.FillPath(arrowBrush, arrowPath);
+                    }
                 }
 
                 // 5️⃣ 绘制目标角度标记（虚线圆圈）
@@ -220,10 +227,6 @@ namespace ProcessModules
                 outerPen.Dispose();
                 innerPen.Dispose();
                 rangeBrush.Dispose();
-                textBrush.Dispose();
-                arrowBrush.Dispose();
-                pointerPen.Dispose();
-                arrowPen.Dispose();
             }
         }
 

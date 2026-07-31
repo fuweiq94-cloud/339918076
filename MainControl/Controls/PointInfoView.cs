@@ -33,7 +33,7 @@ namespace ProcessModules
         public bool Editable { get; set; }
 
         [Category("Appearance")]
-        [DefaultValue(Color.FromArgb(245, 247, 250))]
+        [DefaultValue(typeof(Color), "245, 247, 250")]
         public new Color BackColor { get; set; }
 
         // —— 内部数据绑定 ——
@@ -139,7 +139,7 @@ namespace ProcessModules
             btnRefresh.BackColor = Color.FromArgb(220, 250, 220);
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Cursor = Cursors.Hand;
-            btnRefresh.Click += (s, e) => RefreshPointsList();
+            btnRefresh.Click += new EventHandler(BtnRefresh_Click);
             Controls.Add(btnRefresh);
         }
 
@@ -259,6 +259,14 @@ namespace ProcessModules
             {
                 OnJumpToPointRequested?.Invoke(this, SelectedIndex);
             }
+        }
+
+        /// <summary>
+        /// 刷新点位列表按钮点击事件。
+        /// </summary>
+        private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshPointsList();
         }
 
         /// <summary>

@@ -209,10 +209,10 @@ namespace MainControlProcessModule
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.zBar);
+            this.splitMain.Panel2.Controls.Add(this.pointInfoView);
             this.splitMain.Panel2.Controls.Add(this.uView);
             this.splitMain.Panel2.Controls.Add(this.limitDistView);
-            this.splitMain.Panel2.Controls.Add(this.pointInfoView);
+            this.splitMain.Panel2.Controls.Add(this.zBar);
             this.splitMain.Panel2.Padding = new System.Windows.Forms.Padding(12, 18, 12, 18);
             this.splitMain.Panel2MinSize = 550;
             this.splitMain.Size = new System.Drawing.Size(1754, 1253);
@@ -242,6 +242,24 @@ namespace MainControlProcessModule
             this.zBar.Name = "zBar";
             this.zBar.Size = new System.Drawing.Size(64, 1217);
             this.zBar.TabIndex = 0;
+            // 
+            // uView
+            // 
+            this.uView.Dock = System.Windows.Forms.DockStyle.Top;
+            this.uView.Name = "uView";
+            this.uView.Size = new System.Drawing.Size(220, 120);
+            // 
+            // limitDistView
+            // 
+            this.limitDistView.Dock = System.Windows.Forms.DockStyle.Top;
+            this.limitDistView.Name = "limitDistView";
+            this.limitDistView.Size = new System.Drawing.Size(220, 160);
+            // 
+            // pointInfoView
+            // 
+            this.pointInfoView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pointInfoView.Name = "pointInfoView";
+            this.pointInfoView.Size = new System.Drawing.Size(220, 200);
             // 
             // pnlRight
             // 
@@ -919,7 +937,7 @@ namespace MainControlProcessModule
             // 
             // animTimer
             // 
-            this.animTimer.Interval = 10;
+            this.animTimer.Interval = 16;
             this.animTimer.Tick += new System.EventHandler(this.animTimer_Tick);
             // 
             // MainForm

@@ -239,6 +239,23 @@ namespace ProcessModules
 
         // ============== 内部工具 ==============
 
+        public void GetAllLimitRemaining(out float x, out float y, out float z, out float u)
+        {
+            x = GetAxisLimitRemaining(X);
+            y = GetAxisLimitRemaining(Y);
+            z = GetAxisLimitRemaining(Z);
+            u = GetAxisLimitRemaining(U);
+        }
+
+        private float GetAxisLimitRemaining(AxisController axis)
+        {
+            float minRemain = axis.Current - axis.Min;
+            float maxRemain = axis.Max - axis.Current;
+            if (axis.Current <= (axis.Min + axis.Max) / 2)
+                return -minRemain;
+            return maxRemain;
+        }
+
         private void ForEachAxis(Action<AxisController> action)
         {
             action(X);
