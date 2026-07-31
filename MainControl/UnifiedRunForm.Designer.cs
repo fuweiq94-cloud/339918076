@@ -16,18 +16,18 @@ namespace MainControlProcessModule
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY/Z 视图 ——
-        private XYView xyView;
-        private ZBarView zBar;
+        private ProcessModules.XYView xyView;
+        private ProcessModules.ZBarView zBar;
 
         // —— 软限位距离显示 ——
-        private LimitDistanceView limitDistView;
+        private ProcessModules.LimitDistanceView limitDistView;
 
         // —— DRO 实时坐标 ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
-        private DroLabel droX;
-        private DroLabel droY;
-        private DroLabel droZ;
+        private ProcessModules.DroLabel droX;
+        private ProcessModules.DroLabel droY;
+        private ProcessModules.DroLabel droZ;
 
         // —— 目标坐标输入 ——
         private System.Windows.Forms.GroupBox grpTarget;
@@ -60,14 +60,14 @@ namespace MainControlProcessModule
         private System.Windows.Forms.Label lblStep;
         private System.Windows.Forms.NumericUpDown nudJogStep;
         private System.Windows.Forms.Label lblAxisX;
-        private JogButton jogXMinus;
-        private JogButton jogXPlus;
+        private ProcessModules.JogButton jogXMinus;
+        private ProcessModules.JogButton jogXPlus;
         private System.Windows.Forms.Label lblAxisY;
-        private JogButton jogYMinus;
-        private JogButton jogYPlus;
+        private ProcessModules.JogButton jogYMinus;
+        private ProcessModules.JogButton jogYPlus;
         private System.Windows.Forms.Label lblAxisZ;
-        private JogButton jogZMinus;
-        private JogButton jogZPlus;
+        private ProcessModules.JogButton jogZMinus;
+        private ProcessModules.JogButton jogZPlus;
         private System.Windows.Forms.Button btnEStop;
 
         // —— 通用控制 ——

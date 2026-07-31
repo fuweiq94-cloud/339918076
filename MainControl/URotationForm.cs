@@ -26,8 +26,8 @@ namespace MainControlProcessModule
         private AxisJogService _jogService;
         
         // —— UI 按钮 ——
-        private JogButton jogButtonPlus;
-        private JogButton jogButtonMinus;
+        private ProcessModules.JogButton jogButtonPlus;
+        private ProcessModules.JogButton jogButtonMinus;
 
         // —— 动画定时器 ——
         private Timer animTimer = new Timer();

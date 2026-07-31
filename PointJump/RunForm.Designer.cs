@@ -15,17 +15,17 @@ namespace PointJumpProcessModule
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY 视图 ——
-        private XYView xyView;
+        private ProcessModules.XYView xyView;
 
         // —— 软限位距离显示 ——
-        private LimitDistanceView limitDistView;
+        private ProcessModules.LimitDistanceView limitDistView;
 
         // —— 实时坐标 DRO ——
         private System.Windows.Forms.GroupBox grpDro;
         private System.Windows.Forms.TableLayoutPanel tlpDro;
-        private DroLabel droX;
-        private DroLabel droY;
-        private DroLabel droZ;
+        private ProcessModules.DroLabel droX;
+        private ProcessModules.DroLabel droY;
+        private ProcessModules.DroLabel droZ;
 
         // —— 目标坐标输入 ——
         private System.Windows.Forms.GroupBox grpTarget;

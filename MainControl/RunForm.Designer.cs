@@ -19,19 +19,19 @@ namespace MainControlProcessModule
         private System.Windows.Forms.Panel pnlRight;
 
         // —— XY 视图（自定义控件）——
-        private XYView xyView;
+        private ProcessModules.XYView xyView;
 
         // —— Z 视图（自定义控件）——
-        private ZBarView zBar;
+        private ProcessModules.ZBarView zBar;
 
         // —— U 轴圆形表盘（新增）——
-        private URotationView uView;
+        private ProcessModules.URotationView uView;
 
         // —— 软限位距离显示 ——
-        private LimitDistanceView limitDistView;
+        private ProcessModules.LimitDistanceView limitDistView;
 
         // —— 点位信息面板 ——
-        private PointInfoView pointInfoView;
+        private ProcessModules.PointInfoView pointInfoView;
 
         // —— X 轴组 ——
         private System.Windows.Forms.GroupBox grpX;
@@ -75,14 +75,14 @@ namespace MainControlProcessModule
         private System.Windows.Forms.Label lblAxisHdrX;
         private System.Windows.Forms.Label lblAxisHdrY;
         private System.Windows.Forms.Label lblAxisHdrZ;
-        private JogButton jogXMinus;
-        private JogButton jogXPlus;
-        private JogButton jogYMinus;
-        private JogButton jogYPlus;
-        private JogButton jogZMinus;
-        private JogButton jogZPlus;
-        private JogButton jogUMinus;  // U 轴负向
-        private JogButton jogUPlus;   // U 轴正向
+        private ProcessModules.JogButton jogXMinus;  
+        private ProcessModules.JogButton jogXPlus;
+        private ProcessModules.JogButton jogYMinus;
+        private ProcessModules.JogButton jogYPlus;
+        private ProcessModules.JogButton jogZMinus;
+        private ProcessModules.JogButton jogZPlus;
+        private ProcessModules.JogButton jogUMinus;  // U 轴负向
+        private ProcessModules.JogButton jogUPlus;   // U 轴正向
         private System.Windows.Forms.Button btnEStop;
         private System.Windows.Forms.Label lblAxisHeaderU;  // U 轴标签
 
